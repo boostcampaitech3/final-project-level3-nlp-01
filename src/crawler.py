@@ -32,7 +32,10 @@ class MusicLyricsCrawler:
 
         chrome_options.add_argument('--disable-dev-shm-usage')
 
-        driver = webdriver.Chrome('/Users/yejin/Yejin_drive/VSC_projects/Boostcamp-AI-Tech-Product-Serving/chromedriver')
+        #### 사용하기 전, 절대경로로 수정해주세요.
+        #### 구글 크롬 버전 101.
+        driver = webdriver.Chrome('/Users/yejin/Yejin_drive/VSC_projects/final-project-level3-nlp-01/src/chromedriver') # Mac M1
+        # driver = webdriver.Chrome('./chromedriver.exe') # Window
         driver.get(music_url)
 
         return driver
@@ -52,19 +55,21 @@ class MusicLyricsCrawler:
 
         del singers2[100:]
 
-        songTagList = driver.find_elements_by_id('lst50')
         number = []
+        songTagList = driver.find_elements_by_id('lst50')
         for i in songTagList:
             number.append(i.get_attribute('data-song-no'))
             
         songTagList = driver.find_elements_by_id('lst100')
-        number = []
         for i in songTagList:
             number.append(i.get_attribute('data-song-no'))
 
         Lyric = []
         for i in number:
             driver.get("https://www.melon.com/song/detail.htm?songId=" + i)
+            if i in '33808429':
+                Lyric.append('')
+                continue
             lyric = driver.find_element_by_class_name('lyric')
             Lyric.append(lyric.text)
             
