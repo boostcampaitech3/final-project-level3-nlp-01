@@ -5,7 +5,7 @@ class MusicLyricsCrawler:
     def __init__(self) -> None:
         pass
     
-    def crawl(self, num):
+    def crawl(self):
         data = []
 
         music_url = "https://www.melon.com/chart/index.htm"
@@ -14,12 +14,12 @@ class MusicLyricsCrawler:
         driver = self.initDrive(music_url)
 
         print('Start parsing')
-        data = self.parse(driver, num)
+        data = self.parse(driver)
 
         print('data 수:', len(data))
 
         print('Save to csv')
-        data.to_csv(f"Lyrics top{num}.csv", encoding='utf-8')
+        data.to_csv(f"Lyrics_top100.csv", encoding='utf-8')
 
         return data
 
@@ -32,41 +32,43 @@ class MusicLyricsCrawler:
 
         chrome_options.add_argument('--disable-dev-shm-usage')
 
-        driver = webdriver.Chrome('./chromedriver.exe') #window
-        # driver = webdriver.Chrome('./chromedriver') #mac
+        driver = webdriver.Chrome('/Users/yejin/Yejin_drive/VSC_projects/Boostcamp-AI-Tech-Product-Serving/chromedriver')
         driver.get(music_url)
 
         return driver
 
-    def parse(self, driver, num):
+    def parse(self, driver):
         titles = driver.find_elements_by_class_name('ellipsis.rank01')
         titles2 = []
         for i in titles:
             titles2.append(i.text)
-        
-        del titles2[0]
-        del titles2[num:]
+
+        del titles2[100:]
         
         singers = driver.find_elements_by_class_name('ellipsis.rank02')
         singers2 = []
         for i in singers:
             singers2.append(i.text)
-        
-        del singers2[0]
-        del singers2[num:]
+
+        del singers2[100:]
 
         songTagList = driver.find_elements_by_id('lst50')
+        number = []
+        for i in songTagList:
+            number.append(i.get_attribute('data-song-no'))
+            
+        songTagList = driver.find_elements_by_id('lst100')
         number = []
         for i in songTagList:
             number.append(i.get_attribute('data-song-no'))
 
         Lyric = []
         for i in number:
-            if i % 10 == 0:
-                print('진행중 : ', i, "번 째")
             driver.get("https://www.melon.com/song/detail.htm?songId=" + i)
             lyric = driver.find_element_by_class_name('lyric')
             Lyric.append(lyric.text)
+            
+        print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
 
         data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric})
 
