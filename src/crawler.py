@@ -32,7 +32,8 @@ class MusicLyricsCrawler:
 
         chrome_options.add_argument('--disable-dev-shm-usage')
 
-        driver = webdriver.Chrome('chromedriver.exe')
+        driver = webdriver.Chrome('./chromedriver.exe') #window
+        # driver = webdriver.Chrome('./chromedriver') #mac
         driver.get(music_url)
 
         return driver
