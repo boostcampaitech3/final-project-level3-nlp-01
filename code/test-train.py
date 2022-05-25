@@ -28,15 +28,9 @@ def main():
         config=config, 
         )
 
-    # print(
-    #     config,
-    #     tokenizer,
-    #     model
-    # )
-
     train_data_path = "../data/aihub_kr_hair/drop_dup/training"
     valid_data_path = "../data/aihub_kr_hair/drop_dup/validation"
-    # print(os.listdir(train_data_path))
+
     train_dataset = load_from_disk(train_data_path)
     validation_dataset = load_from_disk(valid_data_path)
 
@@ -117,7 +111,7 @@ def main():
         learning_rate=1e-5,               # learning_rate
         per_device_train_batch_size=8,  # batch size per device during training
         per_device_eval_batch_size=8,   # batch size for evaluation
-        warmup_ratio=0.1,                # number of warmup steps for learning rate scheduler
+        warmup_ratio=0.1,                # warmup ratio for learning rate scheduler
         # weight_decay=0.01,               # strength of weight decay
         logging_dir='./logs',            # directory for storing logs
         logging_steps=100,              # log saving step.
@@ -141,28 +135,6 @@ def main():
     print("Start Training ...")
     trainer.train()
     model.save_pretrained('./best_model')
-
-
-    # dict0 = train_dataset[0:10]
-    # print(dict0)
-    # print()
-    # input0 = f"""
-    # 머리 길이는 {dict0['basestyle-type']}, 곱슬기는 {dict0['curl']}, 앞머리는 {dict0['bang']}, 옆머리는 {dict0['side']},
-    # 가르마는 {dict0['partition']}, 성별은 {dict0['sex']}, 모발 굵기는 {dict0['hair-width']}
-    # """
-    # print(input0)
-    # print()
-
-    # inputs = tokenizer(input0, return_tensors="pt")
-    # print(inputs)
-
-    # with torch.no_grad():
-    #     logits = model(**inputs).logits
-
-    # predicted_class_id = logits.argmax().item()
-    # print(model.config.id2label[predicted_class_id])
-
-
     
 
 if __name__ == "__main__":
