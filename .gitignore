@@ -4,3 +4,4 @@ dataset_dpr.pkl
 __pycache__
 output/
 jupyternote_books/ex.ipynb
+model_file
