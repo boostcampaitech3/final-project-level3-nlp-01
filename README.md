@@ -1,4 +1,4 @@
-## melon top100 가사 크롤러
+## melon 가사 크롤러
 
 ## Pretrained model은 용량이 너무 커서 다음 링크에서 다운받습니다.
 #### `https://drive.google.com/drive/folders/1m02-d4Ihl2gdfKoM9iUHqE2AlvdjMhhE?usp=sharing`
@@ -28,4 +28,4 @@ Lyrics_top100.csv
 
 #### output
 
-Lyrics_top50_2021.csv, Lyrics_top50_2020.csv, ..., Lyrics_top50_2011.csv
+Lyrics_top50_2011.csv, Lyrics_top50_2012.csv, ..., Lyrics_top50_2021.csv
