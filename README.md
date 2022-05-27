@@ -16,11 +16,7 @@
 
 ### 2022년 TOP100
 
-```python
-from crawler import MusicLyricsCrawler
-mc = MusicLyricsCrawler()
-mc.crawl()
-```
+`python crawler.py`
 
 #### output
 
@@ -28,11 +24,7 @@ Lyrics_top100.csv
 
 ### 2011 ~ 2021년 TOP50
 
-```python
-from crawler_year import MusicLyricsCrawler
-mc = MusicLyricsCrawler()
-mc.crawl()
-```
+`python crawler_year.py`
 
 #### output
 
