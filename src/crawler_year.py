@@ -9,7 +9,6 @@ class MusicLyricsCrawler:
     def crawl(self):
         data = []
         years = [i for i in range(2011, 2022)]
-        # years = [i for i in range(2011, 2022)]
         
         for year in years:
             music_url = "https://www.melon.com/chart/age/index.htm?chartType=YE&chartGenre=KPOP&chartDate="+str(year)
@@ -77,9 +76,6 @@ class MusicLyricsCrawler:
             except:
                 Lyric.append('')
                 continue
-            
-            
-            # sleep(3)
             
         print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
 
