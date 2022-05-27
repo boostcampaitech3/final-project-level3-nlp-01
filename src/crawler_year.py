@@ -61,10 +61,13 @@ class MusicLyricsCrawler:
             numbers.append(i.get_attribute('onclick')[31:39])
             
         ban19 = ['33359317', '5473462', '33029346', '8117935', '4213689', '4070694', '4305908', '4065762', '4163510', '3119776', '3425290', '3449749', '2275567', '3156670', '2951007', '3449749', '3364650', '3331548', '3339177', '2299313', '2728462', '2056690', '3439724']
-            
+        urls = []    
+        
         Lyric = []
         for i in numbers:
-            driver.get("https://www.melon.com/song/detail.htm?songId=" + i)
+            url = "https://www.melon.com/song/detail.htm?songId=" + i
+            urls.append(url)
+            driver.get(url)
             if i in ban19:
                 Lyric.append('')
                 continue
@@ -73,6 +76,6 @@ class MusicLyricsCrawler:
             
         print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
 
-        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric})
+        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url":urls})
 
         return data
