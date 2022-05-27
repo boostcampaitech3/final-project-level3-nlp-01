@@ -65,8 +65,12 @@ class MusicLyricsCrawler:
             number.append(i.get_attribute('data-song-no'))
 
         Lyric = []
+        urls = []
+        
         for i in number:
-            driver.get("https://www.melon.com/song/detail.htm?songId=" + i)
+            url = "https://www.melon.com/song/detail.htm?songId=" + i
+            urls.append(url)
+            driver.get(url)
             if i in '33808429':
                 Lyric.append('')
                 continue
@@ -75,6 +79,6 @@ class MusicLyricsCrawler:
             
         print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
 
-        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric})
+        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url": urls})
 
         return data
