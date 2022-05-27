@@ -19,7 +19,7 @@ class MusicLyricsCrawler:
         print('data 수:', len(data))
 
         print('Save to csv')
-        data.to_csv(f"Lyrics_top100.csv", encoding='utf-8')
+        data.to_csv(f"Lyrics_top100.csv", encoding='utf-8', index=False)
 
         return data
 
@@ -82,3 +82,7 @@ class MusicLyricsCrawler:
         data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url": urls})
 
         return data
+    
+if __name__ == '__main__':
+    mc = MusicLyricsCrawler()
+    mc.crawl()

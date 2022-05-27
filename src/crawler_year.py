@@ -21,7 +21,7 @@ class MusicLyricsCrawler:
             print('data 수:', len(data))
 
             print('Save to csv')
-            data.to_csv(f"Lyrics_top50_{year}.csv", encoding='utf-8')
+            data.to_csv(f"Lyrics_top50_{year}.csv", encoding='utf-8', index=False)
 
     def initDrive(self, music_url):
         chrome_options = webdriver.ChromeOptions()
@@ -79,3 +79,8 @@ class MusicLyricsCrawler:
         data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url":urls})
 
         return data
+
+
+if __name__ == '__main__':
+    mc = MusicLyricsCrawler()
+    mc.crawl()
