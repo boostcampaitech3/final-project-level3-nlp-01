@@ -53,7 +53,7 @@ class MusicLyricsCrawler:
         for i in singers:
             singers2.append(i.text)
 
-        del singers2[0:]
+        del singers2[50:]
 
         numbers = []
         songTagList = driver.find_elements_by_css_selector('#lst50 > td:nth-child(4) > div > button.btn_icon.play')
