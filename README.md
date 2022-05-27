@@ -13,3 +13,16 @@ mc.crawl()
 ### output
 
 Lyrics_top100.csv
+
+```python
+from crawler_year import MusicLyricsCrawler
+mc = MusicLyricsCrawler()
+mc.crawl()
+```
+
+### output
+
+Lyrics_top50_2021.csv
+Lyrics_top50_2020.csv
+...
+Lyrics_top50_2011.csv
