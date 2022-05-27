@@ -1,3 +1,4 @@
+from time import sleep
 from selenium import webdriver
 import pandas as pd
 
@@ -8,9 +9,10 @@ class MusicLyricsCrawler:
     def crawl(self):
         data = []
         years = [i for i in range(2011, 2022)]
+        # years = [i for i in range(2011, 2022)]
         
         for year in years:
-            music_url = "https://www.melon.com/chart/age/index.htm?chartType=YE&chartGenre=POP&chartDate="+str(year)
+            music_url = "https://www.melon.com/chart/age/index.htm?chartType=YE&chartGenre=KPOP&chartDate="+str(year)
 
             print('Initialize Drive')
             driver = self.initDrive(music_url)
@@ -58,21 +60,26 @@ class MusicLyricsCrawler:
         numbers = []
         songTagList = driver.find_elements_by_css_selector('#lst50 > td:nth-child(4) > div > button.btn_icon.play')
         for i in songTagList:
-            numbers.append(i.get_attribute('onclick')[31:39])
-            
-        ban19 = ['33359317', '5473462', '33029346', '8117935', '4213689', '4070694', '4305908', '4065762', '4163510', '3119776', '3425290', '3449749', '2275567', '3156670', '2951007', '3449749', '3364650', '3331548', '3339177', '2299313', '2728462', '2056690', '3439724']
-        urls = []    
+            num = i.get_attribute('onclick')[31:39]
+            if num[-1] == ')':
+                num = num.replace(')', '')
+            numbers.append(num)
         
+        urls = []    
         Lyric = []
         for i in numbers:
             url = "https://www.melon.com/song/detail.htm?songId=" + i
             urls.append(url)
             driver.get(url)
-            if i in ban19:
+            try:
+                lyric = driver.find_element_by_class_name('lyric')
+                Lyric.append(lyric.text)
+            except:
                 Lyric.append('')
                 continue
-            lyric = driver.find_element_by_class_name('lyric')
-            Lyric.append(lyric.text)
+            
+            
+            # sleep(3)
             
         print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
 
