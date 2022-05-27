@@ -1,4 +1,4 @@
-## melon top100 가사 크롤러
+## melon 가사 크롤러
 
 ### 사용법
 
@@ -18,4 +18,4 @@ Lyrics_top100.csv
 
 #### output
 
-Lyrics_top50_2021.csv, Lyrics_top50_2020.csv, ..., Lyrics_top50_2011.csv
+Lyrics_top50_2011.csv, Lyrics_top50_2012.csv, ..., Lyrics_top50_2021.csv
