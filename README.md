@@ -10,7 +10,7 @@
 #
 # 사용법(간단하게!)
 ## 가상환경(그냥 간단하게 해버리는 법)
-```source .venv/bin/activate```
+```pip install -r requirements.txt```
 ## 가상환경(정석적으로 poetry 사용하는 법)
 ### 먼저, poetry를 설치해야 합니다.(만약, 안되면 구글링하면 금방 찾을 수 있습니다)
 ```curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python```
