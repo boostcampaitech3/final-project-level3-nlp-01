@@ -1,6 +1,11 @@
 import re
 import emoji
+
+from sklearn.preprocessing import MultiLabelBinarizer
 from soynlp.normalizer import repeat_normalize
+
+mlb = MultiLabelBinarizer()
+mlb.fit([[i for i in range(44)]])
 
 emojis = ''.join(emoji.UNICODE_EMOJI.keys())
 pattern = re.compile(f'[^ .,?!/@$%~％·∼()\x00-\x7Fㄱ-ㅣ가-힣{emojis}]+')
