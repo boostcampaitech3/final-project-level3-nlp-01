@@ -12,6 +12,8 @@ pandas = "^1.4.2"
 transformers = "^4.19.2"
 datasets = "^2.2.2"
 torch = "^1.11.0"
+soynlp = "^0.0.493"
+emoji = "^1.7.0"
 
 [tool.poetry.dev-dependencies]
 
