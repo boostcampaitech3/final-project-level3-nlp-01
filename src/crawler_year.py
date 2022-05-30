@@ -1,3 +1,4 @@
+import pstats
 from time import sleep
 from selenium import webdriver
 import pandas as pd
