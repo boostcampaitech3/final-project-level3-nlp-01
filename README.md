@@ -12,3 +12,7 @@ fine-tuning 시에는 노래와 마찬가지로 100개 정도만 떼어서 하�
 
 ### `code/play_crawler.ipynb`로 크롤링 수행
 ### 수행 결과는 `data/plays.csv`에 저장
+
+### tips
+- 서버가 아닌 로컬에서 하시길 추천드립니다. 서버에서 하실 경우 Safari 및 SafariDriver 등을 서버에 다운로드 받아야 할 것 같습니다.
+- `requirements.txt`에는 crawler 동작에 불필요한 패키지가 포함되어 있을 수도 있습니다. 실행에는 문제가 없을 것 같습니다.
