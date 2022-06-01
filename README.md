@@ -8,7 +8,7 @@ code 디렉토리에서 용도에 맞는(영화, 공연, 노래) ipynb 파일 �
 - (노래) `songs_find_unused_labels.ipynb`
 
 ### label 추적 과정
-각 요소를 pipe에 넣어서 일정 수치(score 0.5) 이상의 label을 최대 5개 뽑고, 해당 요소를 각 label에 포함시켰습니다.
+각 요소를 pipe에 넣어서 label을 내림차순으로 정렬한 뒤 최대 5개 뽑고, 해당 요소를 각 label에 포함시켰습니다.
 그러므로 같은 영화가 다른 label에 중복되어 포함될 수 있습니다.
 
 ### 결과 요약
