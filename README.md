@@ -34,6 +34,8 @@ code 디렉토리에서 용도에 맞는(영화, 공연, 노래) ipynb 파일 �
 - (영화)
     - 포함한 영화가 없는 label:</br>
     <img width="105" alt="스크린샷 2022-06-02 오전 2 05 59" src="https://user-images.githubusercontent.com/79218038/171461034-0f61fe8e-7118-4630-af8b-f1b798ec96b6.png">
-    
+
     - 포함한 영화가 적은 label:</br>
     <img width="363" alt="스크린샷 2022-06-02 오전 2 05 45" src="https://user-images.githubusercontent.com/79218038/171461021-7e84c0d5-e02e-48a8-86f2-cf6254112038.png">
+
+    - '지긋지긋'(포함한 영화가 없는 label), '불평/불만'(포함한 영화가 적은(6개 이하인) label), '환영/호의'(포함한 영화가 7개 이상인 label)
