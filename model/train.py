@@ -14,12 +14,10 @@ model_name = "searle-j/kote_for_easygoing_people"
 model = AutoModelForSequenceClassification.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
-# 현재, 데이터셋이 없는 관계로, 임의로 label을 생성하여 데이터셋으로 만들어봄.
-df = pd.read_csv('../data/Lyrics_top100.csv')
-fake_labels = [list(set(np.random.choice(44, 10))) for _ in range(100)]
-df['labels'] = fake_labels
+df = pd.read_csv('../data/Lyrics_Top100_annotation_completed.csv')
 texts = df['lyric']
 labels = df['labels']
+labels = labels.tolist()
 # KcELECTRA Github에서 제공한 preprocessing 함수
 cleaned_text = [clean(text) for text in texts]
 
