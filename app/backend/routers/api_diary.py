@@ -26,5 +26,16 @@ def startup_event():
 def get_inference(content: InferenceInput):
     diary_content = content.diary_content
     output = do_inference(text=diary_content, threshold=0.2, pipe=pipe)
+    cnt = 0
+    feelings = []
     
-    return output
+    for out in output:
+        feeling, _ = out
+        if feeling == '없음':
+            continue
+        cnt += 1
+        feelings.append(feeling)
+        if cnt == 3:
+            break
+    
+    return feelings
