@@ -9,7 +9,9 @@ class BookIntroCrawler:
     
     def crawl(self):
         data = []
-        book_url = "https://book.naver.com/bestsell/bestseller_list.naver?type=image&cp=yes24&cate=001001044"
+        year = 2022
+        month = 5
+        book_url = f"http://www.yes24.com/24/category/bestseller?CategoryNumber=001001046&sumgb=09&year={year}&month={month}"
 
         print('Initialize Drive')
         driver = self.initDrive(book_url)
@@ -20,7 +22,7 @@ class BookIntroCrawler:
         print('data 수:', len(data))
 
         print('Save to csv')
-        data.to_csv(f"Book_top25.csv", encoding='utf-8', index=False)
+        data.to_csv(f"Book_top20_{year}_{month}.csv", encoding='utf-8', index=False)
 
     def initDrive(self, book_url):
         chrome_options = webdriver.ChromeOptions()
@@ -40,40 +42,38 @@ class BookIntroCrawler:
         return driver
 
     def parse(self, driver):
-        titles = driver.find_elements_by_class_name('list_1')
-        titles2 = []
-        for i in titles:
-            titles2.append(i.text)
-
-        del titles2[25:]
-
-        author = driver.find_elements_by_class_name('')
-        authors = []
         
+        Urls = []
+        Images = []
+        for i in range(1, 61, 2):
+            urls = driver.find_elements_by_css_selector(f'#category_layout > tbody > tr:nth-child({i}) > td.goodsTxtInfo > p:nth-child(1) > a:nth-child(1)')
+            for j in urls:
+                url = j.get_attribute('href')
+                Urls.append(url)
+            images = driver.find_elements_by_css_selector(f'#category_layout > tbody > tr:nth-child({i}) > td.image > div > a:nth-child(1) > img')
+            for k in images:
+                image = k.get_attribute('src')
+                Images.append(image)
         
-
-        numbers = []
-        songTagList = driver.find_elements_by_css_selector('#lst50 > td:nth-child(4) > div > button.btn_icon.play')
-        for i in songTagList:
-            num = i.get_attribute('onclick')[31:39]
-            if num[-1] == ')':
-                num = num.replace(')', '')
-            numbers.append(num)
-        
-        urls = []    
+        Titles = []
+        Authors = []
         Introductions = []
-        for i in numbers:
-            url = "https://book.naver.com/bookdb/book_detail.naver?bid=" + i
-            urls.append(url)
-            driver.get(url)
+                
+        for i in Urls:
+            driver.get(i)
+            title = driver.find_element_by_css_selector('#yDetailTopWrap > div.topColRgt > div.gd_infoTop > div > h2')
+            Titles.append(title.text)
+            author = driver.find_element_by_css_selector('#yDetailTopWrap > div.topColRgt > div.gd_infoTop > span.gd_pubArea > span.gd_auth > a')
+            Authors.append(author.text)
             try:
-                introduction = driver.find_element_by_class_name('introduction')
+                introduction = driver.find_element_by_css_selector('#infoset_introduce > div.infoSetCont_wrap > table > tbody > tr > td > div > div')
                 Introductions.append(introduction.text)
             except:
-                Introductions.append('')
-                continue
+                introduction = driver.find_element_by_css_selector('#infoset_introduce > div.infoSetCont_wrap > div.infoWrap_txt > div')
+                Introductions.append(introduction.text)
             
-        data = pd.DataFrame({"title":titles2, "author":authors, introduction":Introductions, "url":urls})
+            
+        data = pd.DataFrame({"title":Titles, "author":Authors, "introduction":Introductions, "url":Urls, "image":Images})
 
         return data
 
