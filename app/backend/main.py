@@ -29,7 +29,6 @@ def do_example(diary_content):
     params = {"diary_content" : diary_content}
     output = requests.post("http://localhost:8000/diary/input", json=params)
     output = eval(output.content.decode("UTF-8"))
-    print(output)
     
     global user_feeling
     user_feeling = output['now_feelings']
