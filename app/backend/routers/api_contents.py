@@ -21,6 +21,7 @@ class BookOutput(BaseModel):
     title: str = Field(..., description="책 제목")
     author: str = Field(..., description="저자")
     hyperlink: str = Field(..., description="yes24 사이트 주소")
+    image: str = Field(..., description="책 이미지 주소")
     preview: str = Field(..., description="책 소개의 처음 일부분 미리보기")
 
 router = APIRouter(prefix="/contents")
