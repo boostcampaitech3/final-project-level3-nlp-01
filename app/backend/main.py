@@ -7,35 +7,26 @@ app = FastAPI()
 @app.on_event("startup")
 def startup_event():
     import os
-    import pickle
     from os.path import abspath, join
-    from transformers import AutoTokenizer, AutoModelForSequenceClassification
     
-    global model, tokenizer, songs_database, user_feeling
+    global user_feeling, top_dir
     user_feeling = []
     
     here_dir = os.path.abspath(__file__)
     top_dir = abspath(join(here_dir, os.pardir, os.pardir, os.pardir))
-    database_dir = join(top_dir, "data/songs_database.pkl")
-    model_dir = join(top_dir, "app/saved_model")
     
-    with open(database_dir, 'rb') as f:
-        songs_database = pickle.load(f)
-    
-    model = AutoModelForSequenceClassification.from_pretrained(model_dir)
-    tokenizer = AutoTokenizer.from_pretrained(model_dir)
-    
-    from app.backend.routers import api_diary, api_song_playlist
+    from app.backend.routers import api_diary, api_song_playlist, api_user
     app.include_router(api_diary.router)
     app.include_router(api_song_playlist.router)
+    app.include_router(api_user.router)
 
 @app.get('/')
 def hello():
     return "Model and Tokenizer Loaded!"
 
-@app.get('/example')
-def do_example():
-    params = {"diary_content" : "나는 지금 매우매우 슬프다고요ㅠㅠㅠ"}
+@app.get("/example/{diary_content}")
+def do_example(diary_content):
+    params = {"diary_content" : diary_content}
     output = requests.post("http://localhost:8000/diary/input", json=params)
     global user_feeling
     
@@ -46,8 +37,8 @@ def do_example():
 def now_feeling():
     return user_feeling
 
-@app.get('/song_playlist')
-def view_playlist():
+@app.get('/post_example')
+def post_playlist():
     if user_feeling:
         result = requests.post("http://localhost:8000/song_playlist/search", json={"now_feelings" : user_feeling})
         return result.content
