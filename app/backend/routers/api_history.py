@@ -27,11 +27,11 @@ def startup_event():
     with open(selection_history_database_dir, 'rb') as f:
         selection_history_database = pickle.load(f)
 
-@router.get("/diary", response_model=deque)
+@router.get("/diary")
 def view_diary_history_database():
     return diary_history_database
 
-@router.get("/selection", response_model=deque)
+@router.get("/selection")
 def view_selection_history_database():
     return selection_history_database
 
