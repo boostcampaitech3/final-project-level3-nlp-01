@@ -15,10 +15,10 @@ def startup_event():
     here_dir = os.path.abspath(__file__)
     top_dir = abspath(join(here_dir, os.pardir, os.pardir, os.pardir))
     
-    from app.backend.routers import api_diary, api_song_playlist, api_user
+    from app.backend.routers import api_diary, api_contents, api_history
     app.include_router(api_diary.router)
-    app.include_router(api_song_playlist.router)
-    app.include_router(api_user.router)
+    app.include_router(api_contents.router)
+    app.include_router(api_history.router)
 
 @app.get('/')
 def hello():
@@ -28,10 +28,17 @@ def hello():
 def do_example(diary_content):
     params = {"diary_content" : diary_content}
     output = requests.post("http://localhost:8000/diary/input", json=params)
-    global user_feeling
+    output = eval(output.content.decode("UTF-8"))
+    print(output)
     
-    user_feeling = eval(output.content)
-    return user_feeling
+    global user_feeling
+    user_feeling = output['now_feelings']
+    
+    response = requests.post("http://localhost:8000/contents/recommend", json=output)
+    if response.status_code != 200:
+        return "Something is Wrong!!!"
+    
+    return "Well Done!"
 
 @app.get('/feeling')
 def now_feeling():
