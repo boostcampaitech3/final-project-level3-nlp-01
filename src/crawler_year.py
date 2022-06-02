@@ -56,6 +56,14 @@ class MusicLyricsCrawler:
             singers2.append(i.text)
 
         del singers2[50:]
+        
+        Images = []
+        images = driver.find_elements_by_css_selector('#lst50 > td:nth-child(3) > div > a > img')
+        for i in images:
+            image = i.get_attribute('src')
+            Images.append(image)
+            
+        del Images[50:]
 
         numbers = []
         songTagList = driver.find_elements_by_css_selector('#lst50 > td:nth-child(4) > div > button.btn_icon.play')
@@ -78,9 +86,9 @@ class MusicLyricsCrawler:
                 Lyric.append('')
                 continue
             
-        print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
+        print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric), " url : ", len(urls), " image : ", len(Images))
 
-        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url":urls})
+        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url":urls, "image": Images})
 
         return data
 

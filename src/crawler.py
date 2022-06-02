@@ -1,3 +1,4 @@
+import imghdr
 from selenium import webdriver
 import pandas as pd
 
@@ -49,22 +50,28 @@ class MusicLyricsCrawler:
         del Titles[100:]
         
         singers = driver.find_elements_by_class_name('ellipsis.rank02')
-        singers = []
+        Singers = []
         for i in singers:
-            singers.append(i.text)
+            Singers.append(i.text)
 
-        del singers[100:]
+        del Singers[100:]
         
-        images = driver.find_elements_by_class_name('')
         Images = []
+        images = driver.find_elements_by_css_selector('#lst50 > td:nth-child(4) > div > a > img')
         for i in images:
-            Images.append(i.text)
-
+            image = i.get_attribute('src')
+            Images.append(image)
+        images = driver.find_elements_by_css_selector('#lst100 > td:nth-child(4) > div > a > img')
+        for i in images:
+            image = i.get_attribute('src')
+            Images.append(image)
+        
+        del Images[100:]
+        
         number = []
         songTagList = driver.find_elements_by_id('lst50')
         for i in songTagList:
             number.append(i.get_attribute('data-song-no'))
-            
         songTagList = driver.find_elements_by_id('lst100')
         for i in songTagList:
             number.append(i.get_attribute('data-song-no'))
@@ -72,6 +79,7 @@ class MusicLyricsCrawler:
         Lyric = []
         urls = []
         
+        a = 0
         for i in number:
             url = "https://www.melon.com/song/detail.htm?songId=" + i
             urls.append(url)
@@ -81,8 +89,11 @@ class MusicLyricsCrawler:
                 continue
             lyric = driver.find_element_by_class_name('lyric')
             Lyric.append(lyric.text)
-            
-        data = pd.DataFrame({"title":Titles, "singer":singers, "lyric":Lyric, "url": urls, "image": Images})
+            a += 1
+            print(a, "/100")
+        
+        print("title:", len(Titles), " singer:", len(Singers), " lyric:", len(Lyric), " url:", len(urls), " image:", len(Images))
+        data = pd.DataFrame({"title":Titles, "singer":Singers, "lyric":Lyric, "url": urls, "image": Images})
 
         return data
     
