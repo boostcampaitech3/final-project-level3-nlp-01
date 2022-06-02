@@ -42,18 +42,23 @@ class MusicLyricsCrawler:
 
     def parse(self, driver):
         titles = driver.find_elements_by_class_name('ellipsis.rank01')
-        titles2 = []
+        Titles = []
         for i in titles:
-            titles2.append(i.text)
+            Titles.append(i.text)
 
-        del titles2[100:]
+        del Titles[100:]
         
         singers = driver.find_elements_by_class_name('ellipsis.rank02')
-        singers2 = []
+        singers = []
         for i in singers:
-            singers2.append(i.text)
+            singers.append(i.text)
 
-        del singers2[100:]
+        del singers[100:]
+        
+        images = driver.find_elements_by_class_name('')
+        Images = []
+        for i in images:
+            Images.append(i.text)
 
         number = []
         songTagList = driver.find_elements_by_id('lst50')
@@ -77,9 +82,7 @@ class MusicLyricsCrawler:
             lyric = driver.find_element_by_class_name('lyric')
             Lyric.append(lyric.text)
             
-        print("title : ", len(titles2), ", singer : ", len(singers2), ", lytic : ", len(Lyric))
-
-        data = pd.DataFrame({"title":titles2, "singer":singers2, "lyric":Lyric, "url": urls})
+        data = pd.DataFrame({"title":Titles, "singer":singers, "lyric":Lyric, "url": urls, "image": Images})
 
         return data
     
