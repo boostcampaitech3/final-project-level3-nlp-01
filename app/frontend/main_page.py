@@ -13,9 +13,9 @@ import base64  # 나중에 이미지 업로드 용
 # }
 
 
-def get_diary() -> list:
+def get_diary():
     diary = requests.get(url="http://localhost:8000/history/diary")
-    diary_history = list(diary)
+    diary_history = eval(diary.content.decode('UTF-8'))
     return diary_history
 
 
@@ -29,28 +29,40 @@ write_button = col.button("일기 쓰러가기")
 #     page = PAGES['Write']
 #     page.app()
 
-st.markdown("***", unsafe_allow_html=True)
+diarys = get_diary()
 
-diary_history = get_diary()
+for diary_history in diarys:
 
-print(diary_history)
+    diary_time = diary_history['record_time']
+    diary_content = diary_history['diary_content']
+    feelings = diary_history['feelings']
+    # recommended_contents = diary_history['recommended_contents']
+    # recom_con_song = recommended_contents["songs"]
+    # recom_con_ = recommended_contents["songs"]
 
-st.markdown('<p class="content">오늘은 오랜만에 종로를 갔다! 종로에 가서 마라탕 단골집도 가고~ 더웠지만 재밌었던 걸로..^^ 다음에 또 놀러가서 맛있는 거 먹어야겠다! 내일은 열심히 공부를 해보자.</p>', unsafe_allow_html=True)
-st.markdown('<p class="emotions">#즐거움 #기쁨 #배부름</p>', unsafe_allow_html=True)
-st.markdown('<p class="date">2022년 6월 2일 목요일 19시 35분</p>', unsafe_allow_html=True)
+    print("\n\n\n=======diary_time : ", diary_time)
+    print("\n\n\n=======diary_content : ", diary_content)
+    print("\n\n\n=======feelings : ", feelings)
+    # print("\n\n\n=======recommended_contents : ", recommended_contents)
 
+    st.markdown("***", unsafe_allow_html=True)
 
-st.markdown('''<div class="box">
-    <div class="div2">
-        <img class="song_image" src="https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
-        <div class="div1">
-            <a class="box_title" href="https://www.melon.com/song/detail.htm?songId=34997078" target="_blank">That That</a>
-            <p class="box_singer">싸이</p>
-            <p class="box_content">준비하시고 쏘세요 That That I like That 좌 우 위 아래로<br>That That I like That</p>
+    st.markdown(f'<p class="content">{diary_content}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="emotions">#{feelings[0]} #{feelings[1]} #{feelings[2]}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="date">{diary_time}</p>', unsafe_allow_html=True)
+
+    st.markdown('<p class="recom">추천 콘텐츠</p>', unsafe_allow_html=True)
+    st.markdown('''<div class="box">
+        <div class="div2">
+            <img class="song_image" src="https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
+            <div class="div1">
+                <a class="box_title" href="https://www.melon.com/song/detail.htm?songId=34997078" target="_blank">That That</a>
+                <p class="box_singer">싸이</p>
+                <p class="box_content">준비하시고 쏘세요 That That I like That 좌 우 위 아래로<br>That That I like That</p>
+            </div>
         </div>
-    </div>
-    <div><p class="what">노래</p></div>
-</div>''', unsafe_allow_html=True)
+        <div><p class="what">노래</p></div>
+    </div>''', unsafe_allow_html=True)
 
 st.markdown('''<div class="box">
     <div class="div2">
@@ -109,6 +121,7 @@ st.markdown("""<style>
 .emotions{
     font-size: 20px;
     color: #E5A199;
+    margin-bottom: 3px;
 }
 .date{
     font-size: 15px;
@@ -128,7 +141,7 @@ st.markdown("""<style>
 }
 .box{
     box-sizing: border-box;
-    margin-top: 13px;
+    margin-bottom: 13px;
     border-style: solid;
     border-color: grey;
     border-width: 1.5px;
@@ -158,5 +171,11 @@ st.markdown("""<style>
 .movie_image{
     margin-right: 10px;
     height: 130px;
+}
+.recom{
+    text-size: 20px;
+    color: #A5C7A1;
+    margin-bottom: 5px;
+    margin-left: 10px;
 }
 </style>""", unsafe_allow_html=True)
