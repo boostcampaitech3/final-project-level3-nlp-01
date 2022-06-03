@@ -7,9 +7,9 @@ import string
 import base64  # 나중에 이미지 업로드 용
 import write_page
 
-PAGES = {
-    "Write": write_page
-}
+# PAGES = {
+#     "Write": write_page
+# }
 
 
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
@@ -18,9 +18,9 @@ st.markdown('<p class="sub_title">오늘을 마무리하기 전, 당신의 감�
 _, col, _ = st.columns([2.5]*2+[1.18])
 write_button = col.button("일기 쓰러가기")
 
-if write_button:
-    page = PAGES['Write']
-    page.app()
+# if write_button:
+#     page = PAGES['Write']
+#     page.app()
 
 st.markdown("***", unsafe_allow_html=True)
 st.markdown('<p class="content">오늘은 오랜만에 종로를 갔다! 종로에 가서 마라탕 단골집도 가고~ 더웠지만 재밌었던 걸로..^^ 다음에 또 놀러가서 맛있는 거 먹어야겠다! 내일은 열심히 공부를 해보자.</p>', unsafe_allow_html=True)

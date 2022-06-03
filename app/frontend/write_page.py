@@ -6,15 +6,15 @@ import requests
 # from requests.packages.urllib3.util.retry import Retry
 from typing import List, Tuple
 # import base64  # 나중에 이미지 업로드 용
-from multiapp import MultiApp
+# from multiapp import MultiApp
 
-app = MultiApp()
-app.add_app("Foo", foo)
+# app = MultiApp()
+# app.add_app("Foo", foo)
 
-app.run()
+# app.run()
 
-def foo():
-    st.markdown("test", unsafe_allow_html=True)
+# def foo():
+#     st.markdown("test", unsafe_allow_html=True)
 
 ####### style
 st.markdown("""<style>
