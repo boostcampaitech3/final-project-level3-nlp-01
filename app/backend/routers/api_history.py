@@ -1,5 +1,6 @@
-import pickle
+import copy
 
+from pymongo import MongoClient
 from typing import List, Dict
 from collections import deque
 from fastapi import APIRouter, status
@@ -16,20 +17,29 @@ class SelectionInput(BaseModel):
     record_time: str = Field(..., description="콘텐츠가 선택된 날짜")
     selected_content: Dict[str, str] = Field(..., description="선택된 콘텐츠들")
 
+def get_databse_deque(collection):
+    database = deque()
+    for i in collection.find():
+        data_dict= {key : value for key, value in i.items() if key!='_id' }
+        database.append(data_dict)
+    return database
+
 router = APIRouter(prefix='/history')
 
 @router.on_event("startup")
 def startup_event():
     from os.path import join
-    from app.backend.main import top_dir
     
-    global diary_history_database, selection_history_database, diary_history_database_dir, selection_history_database_dir
-    diary_history_database_dir = join(top_dir, "app/database/diary_history_database.pkl")
-    selection_history_database_dir = join(top_dir, "app/database/selection_history_database.pkl")
-    with open(diary_history_database_dir, 'rb') as f:
-        diary_history_database = pickle.load(f)
-    with open(selection_history_database_dir, 'rb') as f:
-        selection_history_database = pickle.load(f)
+    global diary_history_database, selection_history_database, remote_selection_database, remote_diary_database
+    url = '34.64.134.113'
+    client = MongoClient(host=url, port=27017)
+    db_name='final_project'
+    
+    remote_selection_database = client[db_name]['selection_history']
+    selection_history_database = get_databse_deque(remote_selection_database)
+
+    remote_diary_database = client[db_name]['diary_history']
+    diary_history_database = get_databse_deque(remote_diary_database)
 
 @router.get("/diary")
 def view_diary_history_database():
@@ -57,16 +67,15 @@ def insert_diary_record(insert_form: DiaryContentInput):
         정상 동작 시 Response 201 반환
     """
     diary_record = insert_form.dict()
+    remote_diary_record = copy.deepcopy(diary_record)
     try:
-        diary_history_database.appendleft(diary_record)
+        diary_history_database.append(diary_record)
     except:
         return JSONResponse(status_code=status.HTTP_406_NOT_ACCEPTABLE, content={"msg" : "Cannot append to local diary database"})
-                            
     try:
-        with open(diary_history_database_dir, 'wb') as f:
-            pickle.dump(diary_history_database, f)
+        remote_diary_database.insert_one(remote_diary_record)
     except:
-        return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"msg" : "Cannot dump history database!"})
+        JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"msg" : "Cannot dump history database!"})
     
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"msg" : "Diary History Database Updated!"})
 
@@ -81,33 +90,15 @@ def insert_selection_record(insert_form: SelectionInput):
         정상 동작 시 Response 201 반환
     """
     selection_record = insert_form.dict()
+    remote_selection_record = copy.deepcopy(selection_record)
     try:
-        selection_history_database.appendleft(selection_record)
+        selection_history_database.append(selection_record)
     except:
         return JSONResponse(status_code=status.HTTP_406_NOT_ACCEPTABLE, content={"msg" : "Cannot append to local selection database"})
                             
     try:
-        with open(selection_history_database_dir, 'wb') as f:
-            pickle.dump(selection_history_database, f)
+        remote_selection_database.insert_one(remote_selection_record)
     except:
         return JSONResponse(status_code=status.HTTP_403_FORBIDDEN, content={"msg" : "Cannot dump selection database!"})
     
     return JSONResponse(status_code=status.HTTP_201_CREATED, content={"msg" : "Selection History Database Updated!"})
-
-@router.delete("/diary_records")
-def clear_diary_db():
-    """ diary_history_database를 clear합니다.
-    """
-    global diary_history_database
-    diary_history_database = deque()
-    with open(diary_history_database_dir, 'wb') as f:
-            pickle.dump(diary_history_database, f)
-
-@router.delete("/selection_records")
-def clear_selection_db():
-    """ selection_history_database를 clear합니다.
-    """
-    global selection_history_database
-    selection_history_database = deque()
-    with open(selection_history_database_dir, 'wb') as f:
-            pickle.dump(selection_history_database, f)
