@@ -99,3 +99,4 @@ widgetsnbextension==3.6.0
 xxhash==3.0.0; python_version >= "3.6"
 yarl==1.7.2; python_version >= "3.6"
 zipp==3.8.0; python_version < "3.9" and python_version >= "3.7"
+selenium
