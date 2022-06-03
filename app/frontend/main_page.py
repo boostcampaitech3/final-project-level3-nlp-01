@@ -4,8 +4,7 @@ import streamlit as st
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-import string
-import base64  # 나중에 이미지 업로드 용
+import random
 # import write_page
 
 # PAGES = {
@@ -88,8 +87,9 @@ st.markdown("""<style>
     margin-bottom: 13px;
     border-style: solid;
     border-color: grey;
-    border-width: 1.5px;
+    border-width: 0px;
     border-radius: 15px 15px;
+    box-shadow: 2px 2px 2px 2px #CCCCCC;
     padding: 10px;
     display: flex;
     flex-direction: row;
@@ -100,13 +100,14 @@ st.markdown("""<style>
 }
 .div1{
     flex-directon: column;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 }
 .div2{
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     margin: 5px;
+    flex-wrap: nowrap;
 }
 .song_image{
     margin-right: 10px;
@@ -173,13 +174,14 @@ for diary_history in diarys:
     for song in recom_con_songs:
         if len(song) == 0:
             continue
+        num = random.randrange(0, len(song))
         st.markdown(f'''<div class="box">
             <div class="div2">
                 <img class="song_image" src=https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
                 <div class="div1">
-                    <a class="box_title" href={song[0]['hyperlink']} target="_blank">{song[0]['title']}</a>
-                    <p class="box_singer">{song[0]['singer']}</p>
-                    <p class="box_content">{song[0]['preview']}</p>
+                    <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
+                    <p class="box_singer">{song[num]['singer']}</p>
+                    <p class="box_content">{song[num]['preview']}</p>
                 </div>
             </div>
             <div><p class="what_music">노래</p></div>
@@ -189,13 +191,14 @@ for diary_history in diarys:
     for book in recom_con_books:
         if len(book) == 0:
             continue
+        num = random.randrange(0, len(book))
         st.markdown(f'''<div class="box">
             <div class="div2">
-                <img class="movie_image" src={book[0]['image']}>
+                <img class="movie_image" src={book[num]['image']}>
                 <div class="div1">
-                    <a class="box_title" href={book[0]['hyperlink']} target="_blank">{book[0]['title']}</a>
-                    <p class="box_singer">{book[0]['author']}</p>
-                    <p class="box_content">{book[0]['preview']}</p>
+                    <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
+                    <p class="box_singer">{book[num]['author']}</p>
+                    <p class="box_content">{book[num]['preview']}</p>
                 </div>
             </div>
             <div><p class="what_book">책</p></div>
@@ -205,12 +208,13 @@ for diary_history in diarys:
     for movie in recom_con_movies:
         if len(movie) == 0:
             continue
+        num = random.randrange(0, len(movie))
         st.markdown(f'''<div class="box">
             <div class="div2">
-                <img class="movie_image" src={movie[0]['image']}>
+                <img class="movie_image" src={movie[num]['image']}>
                 <div class="div1">
-                    <a class="box_title" href={movie[0]['hyperlink']} target="_blank">{movie[0]['title']}</a>
-                    <p class="box_content">{movie[0]['preview']}</p>
+                    <a class="box_title" href={movie[num]['hyperlink']} target="_blank">{movie[num]['title']}</a>
+                    <p class="box_content">{movie[num]['preview']}</p>
                 </div>
             </div>
             <div><p class="what_movie">영화</p></div>
@@ -220,15 +224,16 @@ for diary_history in diarys:
     for play in recom_con_plays:
         if len(play) == 0:
             continue
+        num = random.randrange(0, len(play))
         st.markdown(f'''<div class="box">
             <div class="div2">
-                <img class="movie_image" src={play[0]['image']}>
-                <div class="div2">
-                    <a class="box_title" href={play[0]['hyperlink']} target="_blank">{play[0]['title']}</a>
-                    <p class="box_content">{play[0]['preview']}</p>
+                <img class="movie_image" src={play[num]['image']}>
+                <div class="div1">
+                    <a class="box_title" href={play[num]['hyperlink']} target="_blank">{play[num]['title']}</a>
+                    <p class="box_content">{play[num]['preview']}</p>
                 </div>
             </div>
-            <div><p class="what_play">연극</p></div>
+            <div><p class="what_play">연극 공연</p></div>
         </div>''', unsafe_allow_html=True)
 
 
