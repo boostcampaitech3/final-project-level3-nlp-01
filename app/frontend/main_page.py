@@ -1,3 +1,4 @@
+from http import client
 from tkinter import PAGES
 import streamlit as st
 import requests
@@ -5,11 +6,17 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 import string
 import base64  # 나중에 이미지 업로드 용
-import write_page
+# import write_page
 
 # PAGES = {
 #     "Write": write_page
 # }
+
+
+def get_diary() -> list:
+    diary = requests.get(url="http://localhost:8000/history/diary")
+    diary_history = list(diary)
+    return diary_history
 
 
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
@@ -23,9 +30,16 @@ write_button = col.button("일기 쓰러가기")
 #     page.app()
 
 st.markdown("***", unsafe_allow_html=True)
+
+diary_history = get_diary()
+
+print(diary_history)
+
 st.markdown('<p class="content">오늘은 오랜만에 종로를 갔다! 종로에 가서 마라탕 단골집도 가고~ 더웠지만 재밌었던 걸로..^^ 다음에 또 놀러가서 맛있는 거 먹어야겠다! 내일은 열심히 공부를 해보자.</p>', unsafe_allow_html=True)
 st.markdown('<p class="emotions">#즐거움 #기쁨 #배부름</p>', unsafe_allow_html=True)
 st.markdown('<p class="date">2022년 6월 2일 목요일 19시 35분</p>', unsafe_allow_html=True)
+
+
 st.markdown('''<div class="box">
     <div class="div2">
         <img class="song_image" src="https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
