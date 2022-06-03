@@ -27,16 +27,31 @@ def startup_event():
     with open(selection_history_database_dir, 'rb') as f:
         selection_history_database = pickle.load(f)
 
-@router.get("/diary", response_model=deque)
+@router.get("/diary")
 def view_diary_history_database():
+    """diary_history를 조회한다.
+
+    Returns:
+        Deque: 지금까지의 history{일기 기록, 시간, 감정, 추천컨텐츠}의 deque를 리턴함.
+    """
     return diary_history_database
 
-@router.get("/selection", response_model=deque)
+@router.get("/selection")
 def view_selection_history_database():
+    """사용자가 선택한 항목의 history를 조회한다. 제작중입니다.
+    """
     return selection_history_database
 
 @router.post("/diary/insert")
 def insert_diary_record(insert_form: DiaryContentInput):
+    """ 일기 기록 1개 {일기 기록, 시간, 감정, 추천컨텐츠}를 diary history에 넣는다.
+
+    Args:
+        insert_form (DiaryContentInput): 일기 기록 1개 {일기 기록, 시간, 감정, 추천컨텐츠}
+
+    Returns:
+        정상 동작 시 Response 201 반환
+    """
     diary_record = insert_form.dict()
     try:
         diary_history_database.appendleft(diary_record)
