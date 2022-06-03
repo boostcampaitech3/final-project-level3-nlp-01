@@ -1,6 +1,7 @@
-from numpy import record
 import requests
 
+from pymongo import MongoClient
+from collections import defaultdict
 from fastapi import APIRouter, HTTPException, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -38,34 +39,34 @@ class PlayOutput(BaseModel):
 
 router = APIRouter(prefix="/contents")
 
+def init_local_db(client: MongoClient, db_name: str, collection_name: str):
+    collection_ = client[db_name][collection_name]
+    mongodb_database = defaultdict(list)
+    for i in collection_.find():
+        key = list(i.keys())[1]
+        value = i[key]
+        mongodb_database[key] = value
+    
+    return mongodb_database
+
 @router.on_event("startup")
 def startup_event():
-    import pickle
-    from os.path import join
-    from app.backend.main import top_dir
-    
     global songs_database, books_database, movies_database, plays_database,\
            playlist, booklist, movielist, theaterlist
+           
+    url = '34.64.134.113'
+    client = MongoClient(host=url, port=27017)
+    db_name='final_project'
+    
     playlist = []
     booklist = []
     movielist = []
     theaterlist = []
     
-    songs_database_dir = join(top_dir, "app/database/songs_database.pkl")
-    with open(songs_database_dir, 'rb') as f:
-        songs_database = pickle.load(f)
-    
-    books_database_dir = join(top_dir, "app/database/books_database.pkl")
-    with open(books_database_dir, 'rb') as f:
-        books_database = pickle.load(f)
-    
-    movies_database_dir = join(top_dir, "app/database/movies_database.pkl")
-    with open(movies_database_dir, 'rb') as f:
-        movies_database = pickle.load(f)
-    
-    plays_database_dir = join(top_dir, "app/database/plays_database.pkl")
-    with open(plays_database_dir, 'rb') as f:
-        plays_database = pickle.load(f)
+    books_database = init_local_db(client=client, db_name=db_name, collection_name='book')
+    movies_database = init_local_db(client=client, db_name=db_name, collection_name='movie')
+    plays_database = init_local_db(client=client, db_name=db_name, collection_name='play')
+    songs_database = init_local_db(client=client, db_name=db_name, collection_name='song')
 
 @router.post("/recommend", response_model=DiaryContentInput)
 def recommend_contents(diary_and_feelings: DiaryAndFeelings):
