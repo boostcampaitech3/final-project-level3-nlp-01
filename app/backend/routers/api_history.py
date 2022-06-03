@@ -15,7 +15,7 @@ class DiaryContentInput(BaseModel):
 
 class SelectionInput(BaseModel):
     record_time: str = Field(..., description="콘텐츠가 선택된 날짜")
-    selected_content: Dict[str, str] = Field(..., description="선택된 콘텐츠들")
+    selected_content: Dict[str, List[Dict[str, str]]] = Field(..., description="선택된 콘텐츠들")
 
 def get_databse_deque(collection):
     database = deque()
