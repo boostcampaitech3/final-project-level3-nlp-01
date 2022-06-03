@@ -1,22 +1,10 @@
-from multiprocessing.sharedctypes import Value
-from turtle import onclick
 import streamlit as st
 import requests
-# from requests.adapters import HTTPAdapter
-# from requests.packages.urllib3.util.retry import Retry
 from typing import List, Tuple
 # import base64  # 나중에 이미지 업로드 용
 # from multiapp import MultiApp
 
-# app = MultiApp()
-# app.add_app("Foo", foo)
-
-# app.run()
-
-# def foo():
-#     st.markdown("test", unsafe_allow_html=True)
-
-####### style
+### page style
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300&family=Song+Myung&display=swap');
 
@@ -73,13 +61,22 @@ st.markdown("""<style>
 
 
 
-    ### 필요한 부분들을 미리 선언해둡니다. 
+### 필요한 부분들을 미리 선언해둡니다. 
 emotions = []
 user_label_dict = {}
 ## 이 부분은 나중에 GET으로 처리예정
 KOTE_label = ['불평/불만', '환영/호의', '감동/감탄', '지긋지긋', '고마움', '슬픔', '화남/분노', '존경', '기대감', '우쭐댐/무시함', '안타까움/실망', '비장함', '의심/불신', '뿌듯함', '편안/쾌적', '신기함/관심', '아껴주는', '부끄러움', '공포/무서움', '절망', '한심함', '역겨움/징그러움', '짜증', '어이없음', '없음', '패배/자기혐오', '귀찮음', '힘듦/지침', '즐거움/신남', '깨달음', '죄책감', '증오/혐오', '흐뭇함(귀여움/예쁨)', '당황/난처', '경악', '부담/안_내킴', '서러움', '재미없음', '불쌍함/연민', '놀람', '행복', '불안/걱정', '기쁨', '안심/신뢰']
 KOTE_label_dict = {i:KOTE_label[i] for i in range(len(KOTE_label))}
-option1, option2, option3 = '', '', ''
+
+## session state; avoiding refresing the entire page when clicking a button
+# 
+if 'user_button' not in st.session_state:
+    st.session_state.user_button = True
+
+if 'user_button' not in st.session_state:
+    st.session_state.user_button = True
+# def update_session():
+#     st.session_state.update = 
 
 def get_feelings_from_diary(user_diary: str) -> List:
     response = requests.post(url="http://localhost:8000/diary/input", json = {"diary_content": user_diary})
@@ -87,9 +84,10 @@ def get_feelings_from_diary(user_diary: str) -> List:
     return emotions
 
 def get_songs_from_emotions(user_selection: List) -> List:
-    response = requests.post(url="http://localhost:8000/diary/input", json = {"now_feelings": user_selection})
-    playlists = eval(response.text)
+    response = requests.post(url="http://localhost:8000/song_playlist/search", json = {"now_feelings": user_selection})
+    playlists = eval(response.text)  # 감정에 해당하는 리스트를 받아옵니다. 
 
+### 감정이 emotions 
 def select_emotion_label(temp_data: Tuple) -> List:
     temp_data = return_user_feelings()
     if temp_data[0] == "KOTE":
@@ -127,15 +125,6 @@ user_diary = st.text_area(label ="", placeholder = f"오늘 하루는 어떠셨�
 _, col, _ = st.columns([1]*2+[1])
 user_feelings_button = col.button("당신의 감정을 정리해드릴게요", key='user_button')  # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
 
-### avoiding refresing the entire page when clicking a button
-### session state
-if 'user_button' not in st.session_state:
-    st.session_state.user_button = True
-
-if 'user_button' not in st.session_state:
-    st.session_state.user_button = True
-# def update_session():
-#     st.session_state.update = 
 
 if user_feelings_button:
     st.markdown("***", unsafe_allow_html=True)
