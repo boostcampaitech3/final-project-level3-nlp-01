@@ -17,8 +17,6 @@ user_diary = st.text_area(label ="", placeholder = f"오늘 하루는 어떠셨�
 if 'user_button' not in st.session_state:
     st.session_state.user_button = True
 
-if 'user_button' not in st.session_state:
-    st.session_state.user_button = True
 # def update_session():
 #     st.session_state.update = 
 
@@ -69,7 +67,7 @@ def return_user_feelings() -> List:
     emotions = get_feelings_from_diary(user_diary)
     print(emotions, len(emotions), type(emotions))
 
-    there_is_no_emotions = st.button("원하는 감정이 없어요!",)
+    there_is_no_emotions = st.button("원하는 감정이 없어요!", key)
     #    there_is_no_emotions = st.radio(label="원하는 감정이 없다면 아래 radio를 선택하세요!", options=['원하는 감정이 없어요'], key='emotion_checkbox', disabled=False)
 
     if there_is_no_emotions:
