@@ -38,6 +38,14 @@ def startup_event():
 
 @router.post("/input", response_model=DiaryAndFeelings)
 def get_inference(content: InferenceInput):
+    """일기 내용을 받아서 {일기 적힌 시간, 일기 내용, 일기 감정들}로 리턴해줌.
+
+    Args:
+        content (InferenceInput): 일기 내용
+
+    Returns:
+        DiaryAndFeelings: {일기 적힌 시간, 일기 내용, 일기 감정들}
+    """
     diary_content = content.diary_content
     output = do_inference(text=diary_content, threshold=0.2, pipe=pipe)
     now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')

@@ -69,6 +69,14 @@ def startup_event():
 
 @router.post("/recommend", response_model=DiaryContentInput)
 def recommend_contents(diary_and_feelings: DiaryAndFeelings):
+    """ {날짜, 일기 내용, 감정}을 입력 시 {날짜, 일기 내용, 감정, 추천컨텐츠}로 반환해준다.
+
+    Args:
+        diary_and_feelings (DiaryAndFeelings): {날짜, 일기 내용, 감정}
+
+    Returns:
+        올바르게 동작 시 Response 200 리턴함.
+    """
     recommended_content = {}
     diary_and_feelings = diary_and_feelings.dict()
     feelings = diary_and_feelings['now_feelings']

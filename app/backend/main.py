@@ -22,10 +22,24 @@ def startup_event():
 
 @app.get('/')
 def hello():
+    """Application이 load 되었는지 보여줍니다.
+
+    Returns:
+        str: "Model and Tokenizer Loaded!"
+    """
     return "Model and Tokenizer Loaded!"
 
 @app.get("/example/{diary_content}")
 def do_example(diary_content):
+    """일기 예시 내용을 넣어서, 감정을 얻어내고 컨텐츠 추출하고,
+       history에 들어가는 것까지 한번에 진행됩니다.
+
+    Args:
+        diary_content (str): 일기 내용
+
+    Returns:
+        정상 동작 시 Response 200 반환
+    """
     params = {"diary_content" : diary_content}
     output = requests.post("http://localhost:8000/diary/input", json=params)
     output = eval(output.content.decode("UTF-8"))
@@ -41,12 +55,9 @@ def do_example(diary_content):
 
 @app.get('/feeling')
 def now_feeling():
-    return user_feeling
+    """가장 최근 일기의 감정을 조회해줍니다.
 
-@app.get('/post_example')
-def post_playlist():
-    if user_feeling:
-        result = requests.post("http://localhost:8000/song_playlist/search", json={"now_feelings" : user_feeling})
-        return result.content
-    else:
-        raise HTTPException(status_code=404, detail="아직 오늘의 일기를 받지 못했습니다.")
+    Returns:
+        List[str]: 감정 리스트
+    """
+    return user_feeling
