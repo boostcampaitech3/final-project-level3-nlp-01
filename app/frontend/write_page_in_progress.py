@@ -46,6 +46,12 @@ st.markdown("""<style>
     margin-top: 25px;
     margin-bottom: 5px;
 }
+.comments{
+    font-size: 15px;
+    color: #E2B79A;
+    text-align: center;
+    margin-bottom: 25px;
+}
 .test{
     background-color:yellow;
 }
@@ -169,35 +175,52 @@ _, col, _ = st.columns([1.1]*2+[1])
 user_feelings_button = False
 if user_diary:
     user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)   # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
-# if user_feelings_button:
-# st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
+    if user_feelings_button:
+    # st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
 
-    ### 여기서부터 테스트
-    print("============================== final_selection check!")
-    emotions = return_user_feelings(user_feelings_button)  # output = emotions
-    print("step1: ", emotions)
+        ### 여기서부터 테스트
+        print("============================== final_selection check!")
+        emotions = return_user_feelings(user_feelings_button)  # output = emotions
+        print("step1: ", emotions)
+        #st.markdown("***")
+        st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
+        st.markdown('<p class="comments">원하는 감정이 없어요! 를 체크하면 다른 감정들을 선택할 수 있습니다.</p>', unsafe_allow_html=True)
+
+        # user_feeling 보여주기; show_user_feelings() 대체
+        _, col1, _ = st.columns([2.7]*2+[1])
+        _, col2, _ = st.columns([2.7]*2+[1])
+        _, col3, _ = st.columns([2.7]*2+[1])
+
+        option1 = col1.checkbox(emotions[0])
+        option2 = col2.checkbox(emotions[1])
+        option3 = col3.checkbox(emotions[2])
+        index = [option1, option2, option3]
+        emotion_data = ("emotions", index)  # 임시데이터
+
+        _, column, _ = st.columns([2.7]*2+[1])
+        there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
+
+        print(option1, option2, option3)
+        print("step2:")
+
+        temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
+        print("step3: ", temp_emotion_data)
+
+        final_selection = select_emotion_label(temp_emotion_data)
+        print("final_selection: ", final_selection)
+
+        # TODO: 사용자의 감정으로 컨텐츠 추천해오기!
+        
+        print("=================================== Success!!")
+        
+        if len(final_selection):
+            st.markdown('<p class="emotions">최종 선택된 감정으로 다양한 컨텐츠를 추천해드릴게요!</p>', unsafe_allow_html=True)
+
+        else:
+            st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
     #st.markdown("***")
-    st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
-
-    # user_feeling 보여주기; show_user_feelings() 대체
-    _, col1, _ = st.columns([2.7]*2+[1])
-    _, col2, _ = st.columns([2.7]*2+[1])
-    _, col3, _ = st.columns([2.7]*2+[1])
-
-    option1 = col1.checkbox(emotions[0])
-    option2 = col2.checkbox(emotions[1])
-    option3 = col3.checkbox(emotions[2])
-    index = [option1, option2, option3]
-    emotion_data = ("emotions", index)  # 임시데이터
-
-    _, column, _ = st.columns([2.7]*2+[1])
-    there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
-
-    print(option1, option2, option3)
-    print("step2:")
-else:
-    pass
-
+#st.markdown('<p class="emotions">감정 선택이 완료되었으면 다음 버튼을 눌러주세요. </p>', unsafe_allow_html=True)
+    
 
 # _, column, _ = st.columns([2.7]*2+[1])
 # there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
@@ -205,12 +228,12 @@ else:
 # (there_is_no_emotions)
 # emotion_data = show_user_feelings() # -> 이거를 나중에 split and show label로 받기
 
-temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
-print("step3: ", temp_emotion_data)
+# temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
+# print("step3: ", temp_emotion_data)
 
-final_selection = select_emotion_label(temp_emotion_data)
-print("final_selection: ", final_selection)
-print("=================================== Success!!")
+# final_selection = select_emotion_label(temp_emotion_data)
+# print("final_selection: ", final_selection)
+# print("=================================== Success!!")
 
 # if user_feelings_button:
 #     st.markdown("***", unsafe_allow_html=True)
