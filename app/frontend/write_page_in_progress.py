@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 from typing import List, Tuple, Optional, Dict
 import json
+import random
 # import base64  # 나중에 이미지 업로드 용
 # from multiapp import MultiApp
 
@@ -45,12 +46,6 @@ st.markdown("""<style>
     margin-top: 25px;
     margin-bottom: 5px;
 }
-.comments{
-    font-size: 15px;
-    color: #E2B79A;
-    text-align: center;
-    margin-bottom: 25px;
-}
 .test{
     background-color:yellow;
 }
@@ -63,6 +58,91 @@ st.markdown("""<style>
     flex-direction: row;
     justify-content: flex-start;
     margin: 5px;
+}
+.comments{
+    font-size: 15px;
+    color: #E2B79A;
+    text-align: center;
+    margin-bottom: 25px;
+}
+.date{
+    font-size: 15px;
+    color: grey;
+}
+.box_singer{
+    font-size: 15px;
+    color: grey;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+.what_music{
+    font-size: 15px;
+    color: #E2B79A;
+    text-align: right;
+    padding-right: 5px;
+    width: 35px;
+}
+.what_book{
+    font-size: 15px;
+    color: #B38EB9;
+    text-align: right;
+    padding-right: 5px;
+    width: 35px;
+}
+.what_movie{
+    font-size: 15px;
+    color: #ECCB3F;
+    text-align: right;
+    padding-right: 5px;
+    width: 35px;
+}
+.what_play{
+    font-size: 15px;
+    color: #A5C7A1;
+    text-align: right;
+    padding-right: 5px;
+    width: 35px;
+}
+.box{
+    box-sizing: border-box;
+    margin-bottom: 13px;
+    border-style: solid;
+    border-color: grey;
+    border-width: 0px;
+    border-radius: 15px 15px;
+    box-shadow: 2px 2px 2px 2px #CCCCCC;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.test{
+    background-color:yellow;
+}
+.div1{
+    flex-directon: column;
+    flex-wrap: nowrap;
+}
+.div2{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 5px;
+    flex-wrap: nowrap;
+}
+.song_image{
+    margin-right: 10px;
+    height: 90px;
+}
+.movie_image{
+    margin-right: 10px;
+    height: 100px;
+}
+.recom{
+    text-size: 20px;
+    color: #A5C7A1;
+    margin-bottom: 5px;
+    margin-left: 10px;
 }
 </style>""", unsafe_allow_html=True)
 
@@ -113,9 +193,12 @@ def get_feelings_from_diary(user_diary: str) -> List:
     return user_info['now_feelings']
 
 
-def get_songs_from_emotions(user_selection: List) -> List:
-    response = requests.post(url="http://localhost:8000/song_playlist/search", json = {"now_feelings": user_selection})
-    playlists = eval(response.text)  # 감정에 해당하는 리스트를 받아옵니다. 
+### 왜 이러는지 모르겠지만 ㅠㅠㅠ
+@st.cache
+def get_songs_from_emotions(final_selection: List) -> List:
+    response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
+    response = eval(response.content)
+    return response
 
 
 # @st.cache(suppress_st_warning=True)
@@ -164,6 +247,10 @@ def select_emotion_label(temp_data: Tuple) -> List:  #
     print("final_selection: ", final_selection)
     return final_selection
 
+### TODO: 감정으로 content를 추천받아오는 함수를 만들어봅니다.
+# def get_songs_from_emotions(final_selection: List) -> List:
+#     response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
+
 
 ###############UI
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
@@ -182,8 +269,8 @@ if user_diary:
         emotions = return_user_feelings(user_feelings_button)  # output = emotions
         print("step1: ", emotions)
         #st.markdown("***")
-        st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
-        st.markdown('<p class="comments">원하는 감정이 없어요! 를 체크하면 다른 감정들을 선택할 수 있습니다.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="emotions">감정 분석 결과입니다! 감정 세 가지를 골라주세요.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="comments">원하는 감정이 없어요! 를 체크하면 다른 감정들을 선택할 수 있습니다. 다른 감정 세 가지를 골라보세요!</p>', unsafe_allow_html=True)
 
         # user_feeling 보여주기; show_user_feelings() 대체
         _, col1, _ = st.columns([2.7]*2+[1])
@@ -212,11 +299,31 @@ if user_diary:
 
         print("=================================== Success!!")
         
-        if len(final_selection):
+        if len(final_selection)==3:
+            st.markdown(f'<p class="comments">사용자가 고른 감정은 {final_selection[0].strip()}, {final_selection[1].strip()}, {final_selection[2].strip()} 이에요!</p>', unsafe_allow_html=True)
             st.markdown('<p class="emotions">최종 선택된 감정으로 다양한 컨텐츠를 추천해드릴게요!</p>', unsafe_allow_html=True)
+
+            temp_songs = get_songs_from_emotions(final_selection)
+            print(f"song1: {len(temp_songs[0])}, song2: {len(temp_songs[1])}, song3: {len(temp_songs[2])}")  # 확인용! 나중에 지우기! 
+            for song in temp_songs:
+                if len(song) == 0:
+                    continue
+            num = random.randrange(0, len(song))
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="song_image" src=https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
+                    <div class="div1">
+                        <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
+                        <p class="box_singer">{song[num]['singer']}</p>
+                        <p class="box_content">{song[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_music">노래</p></div>
+            </div>''', unsafe_allow_html=True)
 
         else:
             st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
+
     #st.markdown("***")
 #st.markdown('<p class="emotions">감정 선택이 완료되었으면 다음 버튼을 눌러주세요. </p>', unsafe_allow_html=True)
     
@@ -339,14 +446,3 @@ if user_diary:
 
     # user_contents_selection = ''
     ### radio button만들기
-
-
-
-
-
-
-
-
-
-
-
