@@ -1,4 +1,3 @@
-from xmlrpc.client import Boolean
 import streamlit as st
 import requests
 from typing import List, Tuple, Optional, Dict
@@ -210,7 +209,7 @@ if user_diary:
         print("final_selection: ", final_selection)
 
         # TODO: 사용자의 감정으로 컨텐츠 추천해오기!
-        
+
         print("=================================== Success!!")
         
         if len(final_selection):
