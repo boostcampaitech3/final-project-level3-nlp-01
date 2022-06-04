@@ -7,4 +7,4 @@ jupyternote_books/ex.ipynb
 pytorch_model.bin
 *.ipynb
 streamlit_test.py
-main_page.py
+./app/frontend/main_page.py
