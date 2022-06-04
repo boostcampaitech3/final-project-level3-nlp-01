@@ -3,6 +3,7 @@ import requests
 from typing import List, Tuple, Optional, Dict
 import json
 import random
+from time import strftime
 # import base64  # 나중에 이미지 업로드 용
 # from multiapp import MultiApp
 
@@ -63,7 +64,7 @@ st.markdown("""<style>
     font-size: 15px;
     color: #E2B79A;
     text-align: center;
-    margin-bottom: 25px;
+    margin-bottom: 50px;
 }
 .date{
     font-size: 15px;
@@ -190,19 +191,136 @@ def get_feelings_from_diary(user_diary: str) -> List:
     user_info = response.json()  # json items: ['record_time', 'diary_content', 'now_feelings'] 일기 생성 시간, 내용, 감정; 
     # print(user_info, user_info['now_feelings'], end="\n")
     # print(type(user_info['now_feelings']))
-    return user_info['now_feelings']
+    return user_info
 
 
-### 왜 이러는지 모르겠지만 ㅠㅠㅠ
+### Songs
 @st.cache
 def get_songs_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
-    response = eval(response.content)
-    return response
+    songs = eval(response.content)
+    return songs
+
+def recommend_songs_from_emotions(temp_songs: List) -> List:
+    temp_rec_songs_dict = {}
+    i = 0
+    for song in temp_songs:
+        if len(song) == 0:
+            i += 1
+            continue
+        else:
+            num = random.randrange(0, len(song))
+            print("songs num",num)
+            print(song[num])
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <div class="div1">
+                        <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
+                        <p class="box_singer">{song[num]['singer']}</p>
+                        <p class="box_content">{song[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_music">노래</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_songs_dict[i] = {'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']}
+            i += 1
+    return temp_rec_songs_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+
+### Books
+@st.cache
+def get_books_from_emotions(final_selection: List) -> List:
+    response = requests.post(url="http://localhost:8000/contents/books/search", json = {"feelings": final_selection})
+    books = eval(response.content)
+    return books
+
+def recommend_books_from_emotions(temp_books: List) -> List:
+    temp_rec_books_dict = {}
+    i = 0
+    for book in temp_books:
+        if len(book) == 0:
+            i += 1
+            continue
+        else:
+            num = random.randrange(0, len(book))
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={book[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
+                        <p class="box_singer">{book[num]['author']}</p>
+                        <p class="box_content">{book[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_book">책</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_books_dict[i] = {'title': book[num]['title'],'author': book[num]['author'], 'image': book[num]['image'], 'hyperlink': book[num]['hyperlink'], 'preview': book[num]['preview']}
+            i += 1
+    return temp_rec_books_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+
+### Movies
+@st.cache
+def get_movies_from_emotions(final_selection: List) -> List:
+    response = requests.post(url="http://localhost:8000/contents/movies/search", json = {"feelings": final_selection})
+    movies = eval(response.content)
+    return movies
+
+def recommend_movies_from_emotions(temp_movies: List) -> List:
+    temp_rec_movies_dict = {}
+    i = 0
+    for movie in temp_movies:
+        if len(movie) == 0:
+            i += 1
+            continue
+        else:
+            num = random.randrange(0, len(movie))
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={movie[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={movie[num]['hyperlink']} target="_blank">{movie[num]['title']}</a>
+                        <p class="box_content">{movie[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_movie">영화</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_movies_dict[i] = {'title': movie[num]['title'],'image': movie[num]['image'], 'hyperlink': movie[num]['hyperlink'], 'preview': movie[num]['preview']}
+            i += 1
+    return temp_rec_movies_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+
+### Plays
+@st.cache
+def get_plays_from_emotions(final_selection: List) -> List:
+    response = requests.post(url="http://localhost:8000/contents/plays/search", json = {"feelings": final_selection})
+    plays = eval(response.content)
+    return plays
+
+def recommend_plays_from_emotions(temp_plays: List) -> List:
+    temp_rec_plays_dict = {}
+    i = 0
+    for play in temp_plays:
+        if len(play) == 0:
+            i += 1
+            continue
+        else:
+            num = random.randrange(0, len(play))
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={play[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={play[num]['hyperlink']} target="_blank">{play[num]['title']}</a>
+                        <p class="box_content">{play[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_play">연극 공연</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_plays_dict[i] = {'title': play[num]['title'],'image': play[num]['image'], 'hyperlink': play[num]['hyperlink'], 'preview': play[num]['preview']}
+            i += 1
+    return temp_rec_plays_dict
 
 
 # @st.cache(suppress_st_warning=True)
-def return_user_feelings(user_feelings_button=False) -> List:
+def return_user_info(user_feelings_button=False) -> List:
     global emotions
     global user_label_dict
 
@@ -210,10 +328,10 @@ def return_user_feelings(user_feelings_button=False) -> List:
     # user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)  # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
     # print("emotions from get_feelings_from_diary", emotions)
     st.markdown("***", unsafe_allow_html=True)
-    emotions = get_feelings_from_diary(user_diary)
+    user_info = get_feelings_from_diary(user_diary)
     # print(emotions, len(emotions), type(emotions))
  
-    return emotions
+    return user_info
 
 
 def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
@@ -266,7 +384,9 @@ if user_diary:
 
         ### 여기서부터 테스트
         print("============================== final_selection check!")
-        emotions = return_user_feelings(user_feelings_button)  # output = emotions
+        user_info = return_user_info(user_feelings_button)  # output = user_info
+        emotions = user_info['now_feelings']
+
         print("step1: ", emotions)
         #st.markdown("***")
         st.markdown('<p class="emotions">감정 분석 결과입니다! 감정 세 가지를 골라주세요.</p>', unsafe_allow_html=True)
@@ -285,7 +405,7 @@ if user_diary:
 
         _, column, _ = st.columns([2.7]*2+[1])
         there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
-
+        st.markdown("###")
         print(option1, option2, option3)
         print("step2:")
 
@@ -304,86 +424,44 @@ if user_diary:
             st.markdown('<p class="emotions">최종 선택된 감정으로 다양한 컨텐츠를 추천해드릴게요!</p>', unsafe_allow_html=True)
 
             temp_songs = get_songs_from_emotions(final_selection)
-            print(f"song1: {len(temp_songs[0])}, song2: {len(temp_songs[1])}, song3: {len(temp_songs[2])}")  # 확인용! 나중에 지우기! 
-            for song in temp_songs:
-                if len(song) == 0:
-                    continue
-            num = random.randrange(0, len(song))
-            st.markdown(f'''<div class="box">
-                <div class="div2">
-                    <img class="song_image" src=https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
-                    <div class="div1">
-                        <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
-                        <p class="box_singer">{song[num]['singer']}</p>
-                        <p class="box_content">{song[num]['preview']}</p>
-                    </div>
-                </div>
-                <div><p class="what_music">노래</p></div>
-            </div>''', unsafe_allow_html=True)
+            temp_books = get_books_from_emotions(final_selection)
+            temp_movies = get_movies_from_emotions(final_selection)
+            temp_plays = get_plays_from_emotions(final_selection)
+
+            print(f"song1: {len(temp_songs[0])}, song2: {len(temp_songs[1])}, song3: {len(temp_songs[2])}")  # 확인용! 나중에 지우기!
+            print(f"book1: {len(temp_books[0])}, book2: {len(temp_books[1])}, book3: {len(temp_books[2])}")  # 확인용! 나중에 지우기!
+            print(f"movies1: {len(temp_movies[0])}, movie2: {len(temp_movies[1])}, movie3: {len(temp_movies[2])}")  # 확인용! 나중에 지우기!
+            print(f"play1: {len(temp_plays[0])}, play2: {len(temp_plays[1])}, play3: {len(temp_plays[2])}")  # 확인용! 나중에 지우기! 
+            rec_songs_list = recommend_songs_from_emotions(temp_songs)
+            rec_books_list = recommend_books_from_emotions(temp_books)
+            rec_movies_list = recommend_movies_from_emotions(temp_movies)
+            rec_plays_list = recommend_plays_from_emotions(temp_plays)
+            final_rec_contents = [rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list]
+            print("check_dicts from recommended lists: ", rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list)
+            st.markdown("##")
+            col1, col2 = st.columns([5, 1])
+            col1.button("다시 추천해주세요!") # 
+            save_to_history = col2.checkbox("저장하기")
+
+            if save_to_history:
+                print("--------------------------user_info-------------")
+                print(user_info)
+                ## TODO: history/diary/insert 호출 후 넣기! 
+                ## TODO1: user_info 가져오기 
+                ## TODO2: user_info에 recommended 추가하기  # songs, books, movies, plays
+                for elem in final_rec_contents:
+                    if len(elem):
+                        print("=========================================")
+                        print()
+                        print("user_info:, ", user_info)
+                        pass
+                    else:
+                        continue
+
+                print("saved to history!")
 
         else:
             st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
-
-    #st.markdown("***")
-#st.markdown('<p class="emotions">감정 선택이 완료되었으면 다음 버튼을 눌러주세요. </p>', unsafe_allow_html=True)
-    
-
-# _, column, _ = st.columns([2.7]*2+[1])
-# there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
-
-# (there_is_no_emotions)
-# emotion_data = show_user_feelings() # -> 이거를 나중에 split and show label로 받기
-
-# temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
-# print("step3: ", temp_emotion_data)
-
-# final_selection = select_emotion_label(temp_emotion_data)
-# print("final_selection: ", final_selection)
-# print("=================================== Success!!")
-
-# if user_feelings_button:
-#     st.markdown("***", unsafe_allow_html=True)
-#     emotions = get_feelings_from_diary(user_diary)
-
-#     st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
-    
-#     _, col2, _ = st.columns([2.7]*2+[1])
-#     _, col3, _ = st.columns([2.7]*2+[1])
-#     _, col4, _ = st.columns([2.7]*2+[1])
-#     col2.checkbox(emotions[0])
-#     col3.checkbox(emotions[1])
-#     col4.checkbox(emotions[2])
-
-#     st.markdown('<p class="what">원하는 감정을 선택하세요</p>', unsafe_allow_html=True)
-#     _, col5, _ = st.columns([2]*2+[1])
-#     recom_button = col5.button("컨텐츠 추천 받기", key='recom_button')
-
-#     st.markdown('<p class="what">원하는 감정이 없으신가요?</p>', unsafe_allow_html=True)
-#     _, col6, _ = st.columns([1.5]*2+[1])
-#     no_emotions_button = col6.button("원하는 감정이 없어요!", key='check', on_change = flip2)
-#     option2 = st.checkbox(emotions[1])
-#     option3 = st.checkbox(emotions[2])
-#     index = [option1, option2, option3]
-
-    # there_is_no_emotions = st.button("원하는 감정이 없어요!",)
-    # if no_emotions_button:
-    #     no_emotion = True
-    #     pass
-
-# if no_emotion:
-#         st.markdown('<p class="emotions">원하는 감정을 선택하세요!</p>', unsafe_allow_html=True)
-
-
-
-    #     there_is_no_emotions = st.radio(label="원하는 감정이 없다면 아래 radio를 선택하세요!", options=['원하는 감정이 없어요'], key='emotion_checkbox', disabled=False)
-
-    #     for i in range(len(KOTE_label)):
-    #         globals()[f'options_{i}'] = st.checkbox(KOTE_label[i])
-    #     index = [f'options_{i}' for i in range(len(KOTE_label))]
-        # return ("KOTE", index)
-    # final_selection = select_emotion_label(emotion_data)
-    # print("final_selection: ", final_selection)
-
     ### TODO: 기록 확인하기 (유저 history data)
 
 
