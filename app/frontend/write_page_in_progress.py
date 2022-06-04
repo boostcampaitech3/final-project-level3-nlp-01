@@ -333,6 +333,24 @@ def return_user_info(user_feelings_button=False) -> List:
  
     return user_info
 
+def write_diary_and_contents(user_info, final_rec_contents):
+    contents = ['songs', 'books', 'movies', 'plays']
+    ## history에 들어가는 감정은 now_feeling이 아니라서.. feeling으로 바꿔주는 작업 필요
+    user_info['feeling'] = user_info['now_feelings']
+    user_info.pop('now_feelings')
+    user_info['recommnded_content'] = {}
+
+    for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
+        if len(fin) == 0:
+            continue
+        else:
+            user_info['recommnded_content'][con] = final_rec_contents
+    
+    user_info = json.dumps(user_info, indent=4)
+    
+    #requests.post(url="http://localhost:8000/contents/plays/search", json = user_info)
+    requests.post(url="http://localhost:8000/history/diary/insert", json = user_info)
+    print(user_info)
 
 def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
     if there_is_no_emotions:
@@ -449,16 +467,11 @@ if user_diary:
                 ## TODO: history/diary/insert 호출 후 넣기! 
                 ## TODO1: user_info 가져오기 
                 ## TODO2: user_info에 recommended 추가하기  # songs, books, movies, plays
-                for elem in final_rec_contents:
-                    if len(elem):
-                        print("=========================================")
-                        print()
-                        print("user_info:, ", user_info)
-                        pass
-                    else:
-                        continue
+                write_diary_and_contents(user_info, final_rec_contents)
 
                 print("saved to history!")
+            else:
+                print("stay calm")
 
         else:
             st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
