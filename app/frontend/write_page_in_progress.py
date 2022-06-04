@@ -1,8 +1,8 @@
 from xmlrpc.client import Boolean
 import streamlit as st
 import requests
-from typing import List, Tuple, Optional
-import random
+from typing import List, Tuple, Optional, Dict
+import json
 # import base64  # 나중에 이미지 업로드 용
 # from multiapp import MultiApp
 
@@ -93,17 +93,19 @@ def flip2():
 
 
 if "test1" not in st.session_state:
-    st.session_state["test1"] = True
+    st.session_state["test1"] = False
 
 if "test2" not in st.session_state:
-    st.session_state["test2"] = True
+    st.session_state["test2"] = False
 
 
 
 def get_feelings_from_diary(user_diary: str) -> List:
     response = requests.post(url="http://localhost:8000/diary/input", json = {"diary_content": user_diary})
-    emotions = eval(response.text)
-    return emotions
+    user_info = response.json()  # json items: ['record_time', 'diary_content', 'now_feelings'] 일기 생성 시간, 내용, 감정; 
+    # print(user_info, user_info['now_feelings'], end="\n")
+    # print(type(user_info['now_feelings']))
+    return user_info['now_feelings']
 
 
 def get_songs_from_emotions(user_selection: List) -> List:
@@ -118,10 +120,10 @@ def return_user_feelings(user_feelings_button=False) -> List:
 
     _, col, _ = st.columns([1.5]*2+[1])
     # user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)  # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
-    print("emotions from get_feelings_from_diary", emotions)
+    # print("emotions from get_feelings_from_diary", emotions)
     st.markdown("***", unsafe_allow_html=True)
     emotions = get_feelings_from_diary(user_diary)
-    print(emotions, len(emotions), type(emotions))
+    # print(emotions, len(emotions), type(emotions))
  
     return emotions
 
@@ -163,17 +165,20 @@ st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub_title">오늘을 마무리하기 전, 당신의 감정에 맞는 컨텐츠를 소개해드립니다.</p>', unsafe_allow_html=True)
 user_diary = st.text_area(label ="", placeholder = f"오늘 하루는 어떠셨나요? 일기든, 감정을 나타내는 키워드든 자유로운 형식으로 정리해보세요.", height=250)
 _, col, _ = st.columns([1.1]*2+[1])
-
+### 필요한 사항들
+user_feelings_button = False
 if user_diary:
     user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)   # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
-    # st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
+# if user_feelings_button:
+# st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
 
     ### 여기서부터 테스트
     print("============================== final_selection check!")
-    emotion_data = return_user_feelings(user_feelings_button)  # output = emotions
-    print("step1: ", emotion_data)
+    emotions = return_user_feelings(user_feelings_button)  # output = emotions
+    print("step1: ", emotions)
     #st.markdown("***")
     st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
+
     # user_feeling 보여주기; show_user_feelings() 대체
     _, col1, _ = st.columns([2.7]*2+[1])
     _, col2, _ = st.columns([2.7]*2+[1])
@@ -184,21 +189,28 @@ if user_diary:
     option3 = col3.checkbox(emotions[2])
     index = [option1, option2, option3]
     emotion_data = ("emotions", index)  # 임시데이터
-    print(option1, option2, option3)
-    print("step2:")
 
     _, column, _ = st.columns([2.7]*2+[1])
     there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
 
-    # (there_is_no_emotions)
-    # emotion_data = show_user_feelings() # -> 이거를 나중에 split and show label로 받기
+    print(option1, option2, option3)
+    print("step2:")
+else:
+    pass
 
-    temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
-    print("step3: ", temp_emotion_data)
 
-    final_selection = select_emotion_label(temp_emotion_data)
-    print("final_selection: ", final_selection)
-    print("=================================== Success!!")
+# _, column, _ = st.columns([2.7]*2+[1])
+# there_is_no_emotions = column.checkbox("원하는 감정이 없어요!", value=st.session_state["test2"], key='check2', on_change=flip2)
+
+# (there_is_no_emotions)
+# emotion_data = show_user_feelings() # -> 이거를 나중에 split and show label로 받기
+
+temp_emotion_data= split_and_show_labels(emotion_data = emotion_data, there_is_no_emotions = there_is_no_emotions)
+print("step3: ", temp_emotion_data)
+
+final_selection = select_emotion_label(temp_emotion_data)
+print("final_selection: ", final_selection)
+print("=================================== Success!!")
 
 # if user_feelings_button:
 #     st.markdown("***", unsafe_allow_html=True)
@@ -306,14 +318,6 @@ if user_diary:
     # user_contents_selection = ''
     ### radio button만들기
 
-    # TODO 1: 사용자에게 감정 입력 받는 박스 만들기 (입력: 문장, 키워드, 일기 등 -> 출력: 감정 라벨)
-    # if user_feeling_button:
-    #     print("Hello World!")  # 사용자의 감정을 정리해줍니다. 누가? 모델이.
-
-
-    # TODO 2: 사용자가 감정을 입력하면 이를 키워드로 나타내는 모델과 연결시키기
-
-    ##
 
 
 
