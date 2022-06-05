@@ -201,8 +201,9 @@ def get_songs_from_emotions(final_selection: List) -> List:
     songs = eval(response.content)
     return songs
 
+
 def recommend_songs_from_emotions(temp_songs: List) -> List:
-    temp_rec_songs_dict = {}
+    temp_rec_songs_list = []
     i = 0
     for song in temp_songs:
         if len(song) == 0:
@@ -223,9 +224,9 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
                 </div>
                 <div><p class="what_music">노래</p></div>
             </div>''', unsafe_allow_html=True)
-            temp_rec_songs_dict[i] = {'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']}
+            temp_rec_songs_list.append({'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']})
             i += 1
-    return temp_rec_songs_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+    return temp_rec_songs_list  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
 
 ### Books
 @st.cache
@@ -234,12 +235,11 @@ def get_books_from_emotions(final_selection: List) -> List:
     books = eval(response.content)
     return books
 
+
 def recommend_books_from_emotions(temp_books: List) -> List:
-    temp_rec_books_dict = {}
-    i = 0
+    temp_rec_books_list = []
     for book in temp_books:
         if len(book) == 0:
-            i += 1
             continue
         else:
             num = random.randrange(0, len(book))
@@ -254,9 +254,10 @@ def recommend_books_from_emotions(temp_books: List) -> List:
                 </div>
                 <div><p class="what_book">책</p></div>
             </div>''', unsafe_allow_html=True)
-            temp_rec_books_dict[i] = {'title': book[num]['title'],'author': book[num]['author'], 'image': book[num]['image'], 'hyperlink': book[num]['hyperlink'], 'preview': book[num]['preview']}
-            i += 1
-    return temp_rec_books_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+            temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
+            #temp_rec_books_list.append( {'title': book[num]['title'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
+            
+    return temp_rec_books_list  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
 
 ### Movies
 @st.cache
@@ -266,7 +267,7 @@ def get_movies_from_emotions(final_selection: List) -> List:
     return movies
 
 def recommend_movies_from_emotions(temp_movies: List) -> List:
-    temp_rec_movies_dict = {}
+    temp_rec_movies_list = []
     i = 0
     for movie in temp_movies:
         if len(movie) == 0:
@@ -284,9 +285,9 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
                 </div>
                 <div><p class="what_movie">영화</p></div>
             </div>''', unsafe_allow_html=True)
-            temp_rec_movies_dict[i] = {'title': movie[num]['title'],'image': movie[num]['image'], 'hyperlink': movie[num]['hyperlink'], 'preview': movie[num]['preview']}
+            temp_rec_movies_list.append({'title': movie[num]['title'], 'hyperlink': movie[num]['hyperlink'], 'image': movie[num]['image'], 'preview': movie[num]['preview']})
             i += 1
-    return temp_rec_movies_dict  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
+    return temp_rec_movies_list  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
 
 ### Plays
 @st.cache
@@ -295,12 +296,11 @@ def get_plays_from_emotions(final_selection: List) -> List:
     plays = eval(response.content)
     return plays
 
+
 def recommend_plays_from_emotions(temp_plays: List) -> List:
-    temp_rec_plays_dict = {}
-    i = 0
+    temp_rec_plays_list = []
     for play in temp_plays:
         if len(play) == 0:
-            i += 1
             continue
         else:
             num = random.randrange(0, len(play))
@@ -314,12 +314,10 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
                 </div>
                 <div><p class="what_play">연극 공연</p></div>
             </div>''', unsafe_allow_html=True)
-            temp_rec_plays_dict[i] = {'title': play[num]['title'],'image': play[num]['image'], 'hyperlink': play[num]['hyperlink'], 'preview': play[num]['preview']}
-            i += 1
-    return temp_rec_plays_dict
+            temp_rec_plays_list.append( {'title': play[num]['title'], 'hyperlink': play[num]['hyperlink'], 'image': play[num]['image'], 'preview': play[num]['preview']} )
+    return temp_rec_plays_list
 
 
-# @st.cache(suppress_st_warning=True)
 def return_user_info(user_feelings_button=False) -> List:
     global emotions
     global user_label_dict
@@ -338,15 +336,20 @@ def write_diary_and_contents(user_info, final_rec_contents):
     ## history에 들어가는 감정은 now_feeling이 아니라서.. feeling으로 바꿔주는 작업 필요
     user_info['feeling'] = user_info['now_feelings']
     user_info.pop('now_feelings')
-    user_info['recommnded_content'] = {}
+    user_info['recommended_content'] = {}
+
+    print("***************user_info******************: ", user_info)
+    print("******************done! end of user_info *************")
 
     for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
         if len(fin) == 0:
             continue
         else:
-            user_info['recommnded_content'][con] = final_rec_contents
+            user_info['recommended_content'][con] = final_rec_contents
     
     user_info = json.dumps(user_info, indent=4)
+    print("***************user_info******************: ", user_info)
+    print("******************done! end of user_info *************")
     
     #requests.post(url="http://localhost:8000/contents/plays/search", json = user_info)
     requests.post(url="http://localhost:8000/history/diary/insert", json = user_info)
@@ -455,6 +458,9 @@ if user_diary:
             rec_movies_list = recommend_movies_from_emotions(temp_movies)
             rec_plays_list = recommend_plays_from_emotions(temp_plays)
             final_rec_contents = [rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list]
+
+            print("check_list from recommeneded list in plays: ", rec_plays_list)
+            print("****************************************************")
             print("check_dicts from recommended lists: ", rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list)
             st.markdown("##")
             col1, col2 = st.columns([5, 1])
@@ -476,32 +482,6 @@ if user_diary:
         else:
             st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
     ### TODO: 기록 확인하기 (유저 history data)
-
-
-
-
-
-    # def main():
-    #     # emotions = return_user_feelings(user_feelings_button)
-    #     print("emotions: ", emotions)
-    #     print("-----------------------------------------------")
-    #     # print(user_label_dict)
-    #     # print(user_label_dict[0], user_label_dict[1], user_label_dict[2])
-    #     # print(f1, f2, f3)
-    #     st.write('Select three known variables:')
-
-    #     option_1 = st.checkbox("A")
-    #     # option_2 = st.checkbox(emotions[1])
-    #     # option_1 = st.multiselect(label = "감정을 골라보세요!", options = emotions)
-
-    #     # print(option_1, option_2, option_3)
-    #     # f1, f2, f3 = return_user_feelings(user_feelings_button)
-    #     st.write("지금의 감정들이 맞는지 확인한 후 선택해주세요. 만약 없다면 하단의 버튼을 클릭해주세요. ")
-
-
-    # main()
-
-
 
 
     # TODO: 사용자 감정을 받아서 checkbox로 출력
@@ -530,10 +510,3 @@ if user_diary:
     # show_user_feelings = st.multiselect(
     #     "지금 느끼는 감정들을 선택해주세요", string
     # )
-
-
-
-    # print(user_contents[1], user_contents[2], user_contents[3])  ## check selection
-
-    # user_contents_selection = ''
-    ### radio button만들기
