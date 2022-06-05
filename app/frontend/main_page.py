@@ -27,6 +27,7 @@ st.markdown("""<style>
     text-align: center;
     font-size: 20px;
     color: #DBA96D;
+    margin-bottom: 50px;
 }
 .content{
     font-size: 18px;
@@ -61,12 +62,24 @@ st.markdown("""<style>
     padding-right: 5px;
     width: 35px;
 }
+.recom_music{
+    text-size: 20px;
+    color: #E2B79A;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
 .what_book{
     font-size: 15px;
     color: #B38EB9;
     text-align: right;
     padding-right: 5px;
     width: 35px;
+}
+.recom_book{
+    text-size: 20px;
+    color: #B38EB9;
+    margin-bottom: 5px;
+    margin-left: 10px;
 }
 .what_movie{
     font-size: 15px;
@@ -75,12 +88,24 @@ st.markdown("""<style>
     padding-right: 5px;
     width: 35px;
 }
+.recom_movie{
+    text-size: 20px;
+    color: #ECCB3F;
+    margin-bottom: 5px;
+    margin-left: 10px;
+}
 .what_play{
     font-size: 15px;
     color: #A5C7A1;
     text-align: right;
     padding-right: 5px;
     width: 35px;
+}
+.recom_play{
+    text-size: 20px;
+    color: #A5C7A1;
+    margin-bottom: 5px;
+    margin-left: 10px;
 }
 .box{
     box-sizing: border-box;
@@ -117,11 +142,10 @@ st.markdown("""<style>
     margin-right: 10px;
     height: 100px;
 }
-.recom{
-    text-size: 20px;
-    color: #A5C7A1;
-    margin-bottom: 5px;
-    margin-left: 10px;
+.title_img{
+    width: 100%;
+    margin-bottom: 100px;
+    margin-top: 30px;
 }
 </style>""", unsafe_allow_html=True)
 
@@ -135,10 +159,12 @@ def get_diary():
 
 
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub_title">오늘을 마무리하기 전, 당신의 감정에 맞는 컨텐츠를 소개해드립니다.</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub_title">“당신의 하루를 들려주세요. 오늘을 닮은 선물을 드릴게요.”</p>', unsafe_allow_html=True)
 
 _, col, _ = st.columns([2.5]*2+[1.18])
 write_button = col.button("일기 쓰러가기")
+
+st.markdown('<img class ="title_img" src="https://velog.velcdn.com/images/leeyejin1231/post/372b949a-afd4-4e30-a5c9-50c94123d681/image.png"/>', unsafe_allow_html=True)
 
 # if write_button:
 #     page = PAGES['Write']
@@ -157,20 +183,14 @@ for diary_history in diarys:
     recom_con_movies = recommended_contents["movies"]
     recom_con_plays = recommended_contents["plays"]
 
-    print("\n\n\n=======diary_time : ", diary_time)
-    print("\n\n\n=======diary_content : ", diary_content)
-    print("\n\n\n=======feelings : ", feelings)
-    print("\n\n\n=======song : ", recom_con_songs[0][0])
-
-    st.markdown("***", unsafe_allow_html=True)
-
     st.markdown(f'<p class="content">{diary_content}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="emotions">#{feelings[0]} #{feelings[1]} #{feelings[2]}</p>', unsafe_allow_html=True)
     st.markdown(f'<p class="date">{diary_time}</p>', unsafe_allow_html=True)
 
-    st.markdown('<p class="recom">추천 콘텐츠</p>', unsafe_allow_html=True)
     
     # 노래
+    if len(recom_con_songs[0]) != 0 or len(recom_con_songs[1]) != 0 or len(recom_con_songs[2]) != 0:
+        st.markdown('<p class="recom_music">당신의 밤을 장식할 노래 한 곡</p>', unsafe_allow_html=True)
     for song in recom_con_songs:
         if len(song) == 0:
             continue
@@ -188,6 +208,8 @@ for diary_history in diarys:
         </div>''', unsafe_allow_html=True)
 
     # 책
+    if len(recom_con_books[0]) != 0 or len(recom_con_books[1]) != 0 or len(recom_con_books[2]) != 0:
+        st.markdown('<p class="recom_book">오늘을 마무리할 책 한 권</p>', unsafe_allow_html=True)
     for book in recom_con_books:
         if len(book) == 0:
             continue
@@ -205,6 +227,8 @@ for diary_history in diarys:
         </div>''', unsafe_allow_html=True)
 
     #영화
+    if len(recom_con_movies[0]) != 0 or len(recom_con_movies[1]) != 0 or len(recom_con_movies[2]) != 0:
+        st.markdown('<p class="recom_movie">당신의 하루를 닭은 또 다른 누군가의 하루를 영화로</p>', unsafe_allow_html=True)
     for movie in recom_con_movies:
         if len(movie) == 0:
             continue
@@ -221,6 +245,8 @@ for diary_history in diarys:
         </div>''', unsafe_allow_html=True)
 
     #연극
+    if len(recom_con_plays[0]) != 0 or len(recom_con_plays[1]) != 0 or len(recom_con_plays[2]) != 0:
+        st.markdown('<p class="recom_play">오늘과 닮은 주말을 선물할 공연</p>', unsafe_allow_html=True)
     for play in recom_con_plays:
         if len(play) == 0:
             continue
@@ -235,6 +261,8 @@ for diary_history in diarys:
             </div>
             <div><p class="what_play">연극 공연</p></div>
         </div>''', unsafe_allow_html=True)
+
+    st.markdown("***", unsafe_allow_html=True)
 
 
 
