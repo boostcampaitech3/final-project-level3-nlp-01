@@ -80,6 +80,7 @@ st.markdown("""<style>
     color: #B38EB9;
     margin-bottom: 5px;
     margin-left: 10px;
+    margin-top: 10px;
 }
 .what_movie{
     font-size: 15px;
@@ -93,6 +94,7 @@ st.markdown("""<style>
     color: #ECCB3F;
     margin-bottom: 5px;
     margin-left: 10px;
+    margin-top: 10px;
 }
 .what_play{
     font-size: 15px;
@@ -106,6 +108,7 @@ st.markdown("""<style>
     color: #A5C7A1;
     margin-bottom: 5px;
     margin-left: 10px;
+    margin-top: 10px;
 }
 .box{
     box-sizing: border-box;
@@ -262,7 +265,11 @@ for diary_history in diarys:
             <div><p class="what_play">연극 공연</p></div>
         </div>''', unsafe_allow_html=True)
 
+    st.markdown("", unsafe_allow_html=True)
+    st.markdown("", unsafe_allow_html=True)
     st.markdown("***", unsafe_allow_html=True)
+    st.markdown("", unsafe_allow_html=True)
+    st.markdown("", unsafe_allow_html=True)
 
 
 
