@@ -150,6 +150,19 @@ st.markdown("""<style>
     margin-bottom: 100px;
     margin-top: 30px;
 }
+.end{
+    font-family: 'Noto Serif KR', serif;
+    text-align: center;
+    color: grey;
+    font-size: 15px;
+    margin-bottom: 2px;
+}
+.end2{
+    font-family: 'Noto Serif KR', serif;
+    text-align: center;
+    color: grey;
+    font-size: 13px;
+}
 </style>""", unsafe_allow_html=True)
 
 
@@ -270,6 +283,9 @@ for diary_history in diarys:
     st.markdown("***", unsafe_allow_html=True)
     st.markdown("", unsafe_allow_html=True)
     st.markdown("", unsafe_allow_html=True)
+
+st.markdown("<p class='end'>오늘의 마침표</p>", unsafe_allow_html=True)
+st.markdown("<p class='end2'>2022 boostcamp AI Tech | nlp-01조</p>", unsafe_allow_html=True)
 
 
 
