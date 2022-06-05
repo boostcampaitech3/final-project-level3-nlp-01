@@ -204,10 +204,8 @@ def get_songs_from_emotions(final_selection: List) -> List:
 
 def recommend_songs_from_emotions(temp_songs: List) -> List:
     temp_rec_songs_list = []
-    i = 0
     for song in temp_songs:
         if len(song) == 0:
-            i += 1
             continue
         else:
             num = random.randrange(0, len(song))
@@ -225,7 +223,6 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
                 <div><p class="what_music">노래</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_songs_list.append({'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']})
-            i += 1
     return temp_rec_songs_list  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
 
 ### Books
@@ -271,7 +268,6 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
     i = 0
     for movie in temp_movies:
         if len(movie) == 0:
-            i += 1
             continue
         else:
             num = random.randrange(0, len(movie))
@@ -286,7 +282,6 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
                 <div><p class="what_movie">영화</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_movies_list.append({'title': movie[num]['title'], 'hyperlink': movie[num]['hyperlink'], 'image': movie[num]['image'], 'preview': movie[num]['preview']})
-            i += 1
     return temp_rec_movies_list  # 수정해야 함! 어떻게 하면 보낼 수 있을까요 ㅠㅠ
 
 ### Plays
@@ -333,28 +328,24 @@ def return_user_info(user_feelings_button=False) -> List:
 
 def write_diary_and_contents(user_info, final_rec_contents):
     contents = ['songs', 'books', 'movies', 'plays']
+    empty_contents = dict.fromkeys(contents)
     ## history에 들어가는 감정은 now_feeling이 아니라서.. feeling으로 바꿔주는 작업 필요
     user_info['feeling'] = user_info['now_feelings']
     user_info.pop('now_feelings')
-    user_info['recommended_content'] = {}
-
-    print("***************user_info******************: ", user_info)
-    print("******************done! end of user_info *************")
+    user_info['recommended_content'] = empty_contents
+    
 
     for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
         if len(fin) == 0:
-            continue
+            user_info['recommended_content'][con]=[{},{},{}]
         else:
-            user_info['recommended_content'][con] = final_rec_contents
+            user_info['recommended_content'][con]= fin
     
     user_info = json.dumps(user_info, indent=4)
     print("***************user_info******************: ", user_info)
     print("******************done! end of user_info *************")
     
-    #requests.post(url="http://localhost:8000/contents/plays/search", json = user_info)
     requests.post(url="http://localhost:8000/history/diary/insert", json = user_info)
-    print(user_info)
-
 def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
     if there_is_no_emotions:
         st.markdown("***", unsafe_allow_html=True)
