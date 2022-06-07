@@ -1,0 +1,30 @@
+
+   
+[tool.poetry]
+name = "final_env"
+version = "0.1.0"
+description = "This is virtualenv for final_project"
+authors = ["KBS"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+jupyter = "^1.0.0"
+ipykernel = "^6.13.0"
+pandas = "^1.4.2"
+transformers = "^4.19.2"
+datasets = "^2.2.2"
+torch = "^1.11.0"
+soynlp = "^0.0.493"
+emoji = "^1.7.0"
+fastapi = "^0.78.0"
+uvicorn = "^0.17.6"
+cookiecutter = "^2.1.0"
+pymongo = "^4.1.1"
+streamlit = "^1.10.0"
+protobuf = "3.20.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
