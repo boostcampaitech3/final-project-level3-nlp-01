@@ -198,7 +198,9 @@ def get_feelings_from_diary(user_diary: str) -> List:
 @st.cache
 def get_songs_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
-    songs = eval(response.content)
+    songs = eval(response.content.decode('UTF-8'))
+    #print("============================SONGS====================================")
+    #print(songs[0])
     return songs
 
 
@@ -229,7 +231,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
 @st.cache
 def get_books_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/books/search", json = {"feelings": final_selection})
-    books = eval(response.content)
+    books = eval(response.content.decode('UTF-8'))
     return books
 
 
@@ -260,7 +262,9 @@ def recommend_books_from_emotions(temp_books: List) -> List:
 @st.cache
 def get_movies_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/movies/search", json = {"feelings": final_selection})
-    movies = eval(response.content)
+    movies = eval(response.content.decode('UTF-8'))
+    # print("============================Movies====================================")
+    # print(movies[0])
     return movies
 
 def recommend_movies_from_emotions(temp_movies: List) -> List:
@@ -288,7 +292,9 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
 @st.cache
 def get_plays_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/plays/search", json = {"feelings": final_selection})
-    plays = eval(response.content)
+    plays = eval(response.content.decode('UTF-8'))
+    print("=================check_decode_error=================")
+    print(plays)
     return plays
 
 
@@ -326,26 +332,63 @@ def return_user_info(user_feelings_button=False) -> List:
  
     return user_info
 
+# 아래 함수는 record_time, diary_content, feelings + 추천컨텐츠를 보내주는 함수임
+# def write_diary_and_contents(user_info, final_rec_contents):
+#     contents = ['songs', 'books', 'movies', 'plays']
+#     empty_contents = dict.fromkeys(contents)
+#     ## history에 들어가는 감정은 now_feeling이 아니라서.. feeling으로 바꿔주는 작업 필요
+#     user_info['feeling'] = user_info['now_feelings']
+#     user_info.pop('now_feelings')
+#     user_info['selected_content'] = empty_contents
+    
+
+#     for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
+#         if len(fin) == 0:
+#             user_info['selected_content'][con]=[{},{},{}]
+#         else:
+#             user_info['selected_content'][con]= fin
+    
+#     user_info = json.dumps(user_info, indent=4)
+#     print("***************user_info******************: ", user_info)
+#     print("******************done! end of user_info *************")
+    
+#     requests.post(url="http://localhost:8000/history/selection/insert", json = user_info)
+
+def get_all_contents_from_feelings(user_info: Dict) -> Dict:
+    pass
+
+
+
+
 def write_diary_and_contents(user_info, final_rec_contents):
     contents = ['songs', 'books', 'movies', 'plays']
     empty_contents = dict.fromkeys(contents)
-    ## history에 들어가는 감정은 now_feeling이 아니라서.. feeling으로 바꿔주는 작업 필요
-    user_info['feeling'] = user_info['now_feelings']
-    user_info.pop('now_feelings')
-    user_info['recommended_content'] = empty_contents
-    
+    print("===========step1_user_info===========")
 
+    user_info.pop('diary_content')
+    user_info.pop('now_feelings')
+
+    print(user_info)
+    print(user_info.keys())
+
+    print("===========step2_user_info===========")
+    user_info['selected_content'] = empty_contents
+    
     for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
         if len(fin) == 0:
-            user_info['recommended_content'][con]=[{},{},{}]
+            user_info['selected_content'][con]=[{},{},{}]
         else:
-            user_info['recommended_content'][con]= fin
-    
-    user_info = json.dumps(user_info, indent=4)
+            user_info['selected_content'][con]= fin
+    print("============================================여기!!!")
+    print(user_info)
+    # user_info = json.dumps(user_info, indent=4)
+
     print("***************user_info******************: ", user_info)
     print("******************done! end of user_info *************")
     
-    requests.post(url="http://localhost:8000/history/diary/insert", json = user_info)
+    requests.post(url="http://localhost:8000/history/selection/insert", json = user_info)
+
+
 def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
     if there_is_no_emotions:
         st.markdown("***", unsafe_allow_html=True)
@@ -452,7 +495,7 @@ if user_diary:
 
             print("check_list from recommeneded list in plays: ", rec_plays_list)
             print("****************************************************")
-            print("check_dicts from recommended lists: ", rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list)
+            print("check_dicts from selected lists: ", rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list)
             st.markdown("##")
             col1, col2 = st.columns([5, 1])
             col1.button("다시 추천해주세요!") # 
@@ -463,7 +506,7 @@ if user_diary:
                 print(user_info)
                 ## TODO: history/diary/insert 호출 후 넣기! 
                 ## TODO1: user_info 가져오기 
-                ## TODO2: user_info에 recommended 추가하기  # songs, books, movies, plays
+                ## TODO2: user_info에 selected 추가하기  # songs, books, movies, plays
                 write_diary_and_contents(user_info, final_rec_contents)
 
                 print("saved to history!")
