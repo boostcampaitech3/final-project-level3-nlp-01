@@ -25,6 +25,7 @@ $ docker restart mongodb-container
 $ docker exec -it mongodb-container bash
 ```
 
+
 ## Pretrained model은 용량이 너무 커서 다음 링크에서 다운받습니다.
 #### `https://drive.google.com/drive/folders/1m02-d4Ihl2gdfKoM9iUHqE2AlvdjMhhE?usp=sharing`
 
@@ -44,11 +45,14 @@ python -m app
 ```python
 python crawler.py
 ```
+
 #### output
 
 Lyrics_top100.csv
 
 ### 2011 ~ 2021년 TOP50
+
+
 ```python
 python crawler_year.py
 ```
