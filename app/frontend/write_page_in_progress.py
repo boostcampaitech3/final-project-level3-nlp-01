@@ -384,7 +384,7 @@ def select_emotion_label(temp_data: Tuple) -> List:  #
 
 ###############UI
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
-st.markdown('<p class="sub_title">오늘을 마무리하기 전, 당신의 감정에 맞는 컨텐츠를 소개해드립니다.</p>', unsafe_allow_html=True)
+st.markdown('<p class="sub_title">" 당신의 하루를 들려주세요. 오늘을 닮은 선물을 드릴게요."</p>', unsafe_allow_html=True)
 user_diary = st.text_area(label ="", placeholder = f"오늘 하루는 어떠셨나요? 일기든, 감정을 나타내는 키워드든 자유로운 형식으로 정리해보세요.", height=250)
 _, col, _ = st.columns([1.1]*2+[1])
 ### 필요한 사항들
