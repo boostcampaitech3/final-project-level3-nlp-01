@@ -28,7 +28,7 @@
 
 # Architecture
 ![Architecture](https://user-images.githubusercontent.com/79088141/172328054-3c7a7c2c-8397-464c-b317-12b43c3d5900.png)
-자세한 내용은 [발표 pdf](https://github.com/boostcampaitech3/final-project-level3-nlp-01/files/8851388/NLP_1._.pdf)를 참고해주시면 됩니다.
+자세한 내용은 [발표 pdf](https://github.com/boostcampaitech3/final-project-level3-nlp-01/blob/main/NLP_1%EC%A1%B0_%ED%95%98%EB%A3%A8%EC%9D%98%20%EB%A7%88%EC%B9%A8%ED%91%9C.pdf)를 참고해주시면 됩니다.
 
 </br>
 </br>
@@ -70,9 +70,10 @@ https://python-poetry.org/docs<br/>
 ### Back-end 실행
 1. 가상환경 활성화를 위해 다음 커맨드를 입력합니다.
     ```console
-    source virtualenv.sh```
+    source virtualenv.sh
+    ```
 2. fastapi server를 구동시키기 위해 다음 커맨드를 입력합니다.
-    * `python -m app`
+    - `python -m app`
 
     
 ## Cloud Server
@@ -137,7 +138,7 @@ Reference : https://github.com/Beomi/KcELECTRA
 ## 책
 책 데이터는 yes24 소설/시 카테고리 중 '강력추천' 도서 목록((http://www.yes24.com/24/Category/More/001001046?ElemNo=95&ElemSeq=1))을 크롤링했으며 수집된 정보는 '도서명', '저자', '소개글', 'URL', '이미지 경로' 총 다섯가지입니다.  
 중복을 제거해 총 238개의 데이터를 확보했습니다.
-
+경
 <img width="200" alt="스크린샷 2022-06-05 오후 9 25 28" src="https://user-images.githubusercontent.com/79218038/172327413-94dc2306-303c-4950-8bd7-935d2e118894.png">
 
 
