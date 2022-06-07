@@ -5,3 +5,6 @@ __pycache__
 output/
 jupyternote_books/ex.ipynb
 pytorch_model.bin
+*.ipynb
+streamlit_test.py
+app/frontend/main_page.py
