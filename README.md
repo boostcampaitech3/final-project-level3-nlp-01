@@ -42,6 +42,10 @@ https://python-poetry.org/docs<br/>
 `poetry install`
 <br/><br/>
 
+## Pretrained model은 용량이 너무 커서 다음 링크에서 다운받습니다.
+#### `https://drive.google.com/drive/folders/1m02-d4Ihl2gdfKoM9iUHqE2AlvdjMhhE?usp=sharing`
+<br/><br/>
+
 ## Local Server (Front-end, Back-end)
 
 ### frontend 실행
@@ -106,7 +110,6 @@ python crawler_year.py
 ```
 #### output
 Lyrics_top100.csv, Lyrics_top50_2011.csv, Lyrics_top50_2012.csv, ..., Lyrics_top50_2021.csv
-
 
 # Model
 ## KcELECTRA(Korean comments ELECTRA)
