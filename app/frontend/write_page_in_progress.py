@@ -467,12 +467,9 @@ def return_user_info(user_feelings_button=False) -> List:
     global user_label_dict
 
     _, col, _ = st.columns([1.5]*2+[1])
-    # user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)  # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
-    # print("emotions from get_feelings_from_diary", emotions)
     st.markdown("***", unsafe_allow_html=True)
     user_info = get_feelings_from_diary(user_diary)
-    # print(emotions, len(emotions), type(emotions))
- 
+  
     return user_info
 
 def write_diary_and_contents(user_info, final_rec_contents):
