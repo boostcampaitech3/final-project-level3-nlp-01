@@ -1,11 +1,7 @@
 import streamlit as st
 import requests
 from typing import List, Tuple, Optional, Dict
-import json
 import random
-from time import strftime
-# import base64  # 나중에 이미지 업로드 용
-# from multiapp import MultiApp
 
 ### page style
 st.markdown("""<style>
@@ -230,11 +226,9 @@ def check_list_elems_exists(some_list: List) -> List:
     check_list_sum = sum(check_list)
     return check_list_sum
 
-def get_feelings_from_diary(user_diary: str) -> List:
+def get_feelings_from_diary(user_diary: str) -> Dict:
     response = requests.post(url="http://localhost:8000/diary/input", json = {"diary_content": user_diary})
-    user_info = response.json()  # json items: ['record_time', 'diary_content', 'now_feelings'] 일기 생성 시간, 내용, 감정; 
-    # print(user_info, user_info['now_feelings'], end="\n")
-    # print(type(user_info['now_feelings']))
+    user_info = response.json()  # json keys: ['record_time', 'diary_content', 'now_feelings'] 일기 생성 시간, 내용, 감정; 
     return user_info
 
 
@@ -306,7 +300,6 @@ def recommend_books_from_emotions(temp_books: List) -> List:
     temp_rec_books_list = []
     all_books_list = []
     check_length = check_list_elems_exists(temp_books)
-    print(f"check_length == {check_length}")
     if check_length == 0:  ## 만약 temp_books에 아무것도 안 들어있다면 return temp_rec_books_list 반환하기!
         return temp_rec_books_list 
     
@@ -335,7 +328,6 @@ def recommend_books_from_emotions(temp_books: List) -> List:
                 all_books_list.extend(book)
 
         nums = random.sample(range(0, len(all_books_list)), min(3, len(all_books_list)))  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
-        print(nums,"number in book random.sample! =======================")
         for num in nums:
             st.markdown(f'''<div class="box">
                 <div class="div2">
@@ -458,21 +450,19 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
                 <div><p class="what_play">연극 공연</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_plays_list.append( {'title': all_plays_list[num]['title'], 'hyperlink': all_plays_list[num]['hyperlink'], 'image': all_plays_list[num]['image'], 'preview': all_plays_list[num]['preview']} )
-        print(len(all_plays_list))
         return temp_rec_plays_list
 
 
-def return_user_info(user_feelings_button=False) -> List:
+def return_user_info(user_feelings_button=False) -> Dict:
     global emotions
     global user_label_dict
 
     _, col, _ = st.columns([1.5]*2+[1])
     st.markdown("***", unsafe_allow_html=True)
     user_info = get_feelings_from_diary(user_diary)
-  
     return user_info
 
-def write_diary_and_contents(user_info, final_rec_contents):
+def write_diary_and_contents(user_info: Dict, final_rec_contents: List) -> None:
     """
     history/selection/insert에서 받는 포맷은 다음과 같습니다:
     class SelectionInput(BaseModel):
@@ -531,13 +521,13 @@ st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
 st.markdown('<p class="sub_title">" 당신의 하루를 들려주세요. 오늘을 닮은 선물을 드릴게요."</p>', unsafe_allow_html=True)
 user_diary = st.text_area(label ="", placeholder = f"오늘 하루는 어떠셨나요? 일기든, 감정을 나타내는 키워드든 자유로운 형식으로 정리해보세요.", height=250)
 _, col, _ = st.columns([1.1]*2+[1])
-### 필요한 사항들
+
 user_feelings_button = False
 if user_diary:
     user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)   # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
     if user_feelings_button:
 
-        ### 여기서부터 테스트
+        ### 여
         print("============================== final_selection check!")
         user_info = return_user_info(user_feelings_button)  # output = user_info
         emotions = user_info['now_feelings']
@@ -568,7 +558,6 @@ if user_diary:
         print("step3: ", temp_emotion_data)
 
         final_selection = select_emotion_label(temp_emotion_data)
-        print("final_selection: ", final_selection)
 
         # TODO: 사용자의 감정으로 컨텐츠 추천해오기!
 
@@ -583,10 +572,10 @@ if user_diary:
             temp_movies = get_movies_from_emotions(final_selection)
             temp_plays = get_plays_from_emotions(final_selection)
 
-            print(f"song1: {len(temp_songs[0])}, song2: {len(temp_songs[1])}, song3: {len(temp_songs[2])}")  # 확인용! 나중에 지우기!
-            print(f"book1: {len(temp_books[0])}, book2: {len(temp_books[1])}, book3: {len(temp_books[2])}")  # 확인용! 나중에 지우기!
-            print(f"movies1: {len(temp_movies[0])}, movie2: {len(temp_movies[1])}, movie3: {len(temp_movies[2])}")  # 확인용! 나중에 지우기!
-            print(f"play1: {len(temp_plays[0])}, play2: {len(temp_plays[1])}, play3: {len(temp_plays[2])}")  # 확인용! 나중에 지우기! 
+            print(f"num of songs for {final_selection[0]}: {len(temp_songs[0])}, num of songs for {final_selection[1]}: {len(temp_songs[1])}, num of songs for {final_selection[2]}: {len(temp_songs[2])}")  # 확인용! 
+            print(f"num of books for {final_selection[0]}: {len(temp_books[0])}, num of movies for {final_selection[1]}: {len(temp_books[1])}, num of books for {final_selection[2]}: {len(temp_books[2])}")  # 확인용! 
+            print(f"num of movies for {final_selection[0]}: {len(temp_movies[0])}, num of books for {final_selection[1]}: {len(temp_movies[1])}, num of movies for {final_selection[2]}: {len(temp_movies[2])}")  # 확인용! 
+            print(f"num of plays for {final_selection[0]}: {len(temp_plays[0])}, num of plays for {final_selection[1]}: {len(temp_plays[1])}, num of plays for {final_selection[2]}: {len(temp_plays[2])}")  # 확인용! 
             rec_songs_list = recommend_songs_from_emotions(temp_songs)
             rec_books_list = recommend_books_from_emotions(temp_books)
             rec_movies_list = recommend_movies_from_emotions(temp_movies)
@@ -599,11 +588,8 @@ if user_diary:
             save_to_history = col2.checkbox("저장하기")
 
             if save_to_history:
-                print("--------------------------user_info-------------")
+                print("===========user_info===========")
                 print(user_info)
-                ## TODO: history/diary/insert 호출 후 넣기! 
-                ## TODO1: user_info 가져오기 
-                ## TODO2: user_info에 recommended 추가하기  # songs, books, movies, plays
                 write_diary_and_contents(user_info, final_rec_contents)
 
                 print("saved to history!")
