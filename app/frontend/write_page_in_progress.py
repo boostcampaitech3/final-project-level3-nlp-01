@@ -248,13 +248,14 @@ def get_songs_from_emotions(final_selection: List) -> List:
 
 def recommend_songs_from_emotions(temp_songs: List) -> List:
     temp_rec_songs_list = []
-    for song in temp_songs:
-        if len(song) == 0:
-            continue
-        else:
+    all_songs_list =[]
+    check_length = check_list_elems_exists(temp_songs)
+    if check_length == 0:
+        return temp_rec_songs_list
+
+    elif check_length == 3:
+        for song in temp_songs:
             num = random.randrange(0, len(song))
-            print("songs num",num)
-            print(song[num])
             st.markdown(f'''<div class="box">
                 <div class="div2">
                     <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
@@ -267,7 +268,31 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
                 <div><p class="what_music">노래</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_songs_list.append({'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']})
-    return temp_rec_songs_list
+        return temp_rec_songs_list
+    
+    else:
+        for song in temp_songs:
+            if len(song) == 0:
+                continue
+        else:
+            all_songs_list.extend(song)
+        
+        nums = random.sample(range(0, len(all_songs_list)), min(3, len(all_songs_list)))
+        for num in nums:
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <div class="div1">
+                        <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
+                        <p class="box_singer">{song[num]['singer']}</p>
+                        <p class="box_content">{song[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_music">노래</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_songs_list.append({'title': song[num]['title'], 'singer': song[num]['singer'], 'hyperlink': song[num]['hyperlink'], 'preview': song[num]['preview']})
+        return temp_rec_songs_list
+
 
 ### Books
 @st.cache
@@ -279,6 +304,7 @@ def get_books_from_emotions(final_selection: List) -> List:
 
 def recommend_books_from_emotions(temp_books: List) -> List:
     temp_rec_books_list = []
+    all_books_list = []
     check_length = check_list_elems_exists(temp_books)
     print(f"check_length == {check_length}")
     if check_length == 0:  ## 만약 temp_books에 아무것도 안 들어있다면 return temp_rec_books_list 반환하기!
@@ -301,57 +327,59 @@ def recommend_books_from_emotions(temp_books: List) -> List:
             temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
         return temp_rec_books_list
 
-    elif check_length == 1:
-        i = 3
-        for book in temp_books:
-            if len(book) == 0:
-                continue
-        else:
-            nums = random.sample(range(0, len(book)), min(i,len(book)))  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
-            print(nums,"number in book random.sample! =======================")
-            for num in nums:
-                st.markdown(f'''<div class="box">
-                    <div class="div2">
-                        <img class="movie_image" src={book[num]['image']}>
-                        <div class="div1">
-                            <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
-                            <p class="box_singer">{book[num]['author']}</p>
-                            <p class="box_content">{book[num]['preview']}</p>
-                        </div>
-                    </div>
-                    <div><p class="what_book">책</p></div>
-                </div>''', unsafe_allow_html=True)
-                temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
-            return temp_rec_books_list
-    
-    elif check_length == 2:
-        temp_num_dict = {1: [1, 2], 2: [2, 1]} # 반환받을 감정 개수를 선택함. 감정라벨 2개에 해당하는 book만 있으므로 1개, 2개만을 뽑아올 라벨을 랜덤하게 정함.
-        i = random.choice([1, 2])  # 1과 2중 선택 후
-        num_of_samples_from_labels = temp_num_dict[i]  # 순서대로 뽑힌 감정마다 몇 개의 샘플을 추출할지 정함
+    else:
         for book in temp_books:
             if len(book) == 0:
                 continue
             else:
-                i = num_of_samples_from_labels[0]
-                num_of_samples_from_labels.pop(i)
-                print(f"{i} for books=============================")
-                nums = random.sample(range(0, len(book)), i)  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
+                all_books_list.extend(book)
+
+        nums = random.sample(range(0, len(all_books_list)), min(3, len(all_books_list)))  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
+        print(nums,"number in book random.sample! =======================")
+        for num in nums:
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={all_books_list[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={all_books_list[num]['hyperlink']} target="_blank">{all_books_list[num]['title']}</a>
+                        <p class="box_singer">{all_books_list[num]['author']}</p>
+                        <p class="box_content">{all_books_list[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_book">책</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_books_list.append({'title': all_books_list[num]['title'],'author': all_books_list[num]['author'], 'hyperlink': all_books_list[num]['hyperlink'], 'image': all_books_list[num]['image'], 'preview': all_books_list[num]['preview']})
+        return temp_rec_books_list
+    
+    # elif check_length == 2:
+    #     temp_num_dict = {1: [1, 2], 2: [2, 1]} # 반환받을 감정 개수를 선택함. 감정라벨 2개에 해당하는 book만 있으므로 1개, 2개만을 뽑아올 라벨을 랜덤하게 정함.
+    #     i = random.choice([1, 2])  # 1과 2중 선택 후
+    #     num_of_samples_from_labels = temp_num_dict[i]  # 순서대로 뽑힌 감정마다 몇 개의 샘플을 추출할지 정함
+    #     for book in temp_books:
+    #         if len(book) == 0:
+    #             continue
+    #         else:
+    #             i = num_of_samples_from_labels[0]
+    #             popped_elem = num_of_samples_from_labels.pop(i)
+    #             num_of_samples_from_labels.append(popped_elem)
+    #             print(f"{i} for books=============================")
+    #             nums = random.sample(range(0, len(book)), i)  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
                 
-                print(nums,f"number in book random.sample! =======================")
-                for num in nums:
-                    st.markdown(f'''<div class="box">
-                        <div class="div2">
-                            <img class="movie_image" src={book[num]['image']}>
-                            <div class="div1">
-                                <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
-                                <p class="box_singer">{book[num]['author']}</p>
-                                <p class="box_content">{book[num]['preview']}</p>
-                            </div>
-                        </div>
-                        <div><p class="what_book">책</p></div>
-                    </div>''', unsafe_allow_html=True)
-                    temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
-                return temp_rec_books_list
+    #             print(nums,f"number in book random.sample! =======================")
+    #             for num in nums:
+    #                 st.markdown(f'''<div class="box">
+    #                     <div class="div2">
+    #                         <img class="movie_image" src={book[num]['image']}>
+    #                         <div class="div1">
+    #                             <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
+    #                             <p class="box_singer">{book[num]['author']}</p>
+    #                             <p class="box_content">{book[num]['preview']}</p>
+    #                         </div>
+    #                     </div>
+    #                     <div><p class="what_book">책</p></div>
+    #                 </div>''', unsafe_allow_html=True)
+    #                 temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
+    #             return temp_rec_books_list
 
 ### Movies
 @st.cache
@@ -362,11 +390,13 @@ def get_movies_from_emotions(final_selection: List) -> List:
 
 def recommend_movies_from_emotions(temp_movies: List) -> List:
     temp_rec_movies_list = []
-    i = 0
-    for movie in temp_movies:
-        if len(movie) == 0:
-            continue
-        else:
+    all_movies_list = []
+    check_length = check_list_elems_exists(temp_movies)
+    if check_length == 0:
+        return temp_rec_movies_list
+
+    elif check_length == 3:
+        for movie in temp_movies:
             num = random.randrange(0, len(movie))
             st.markdown(f'''<div class="box">
                 <div class="div2">
@@ -379,7 +409,31 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
                 <div><p class="what_movie">영화</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_movies_list.append({'title': movie[num]['title'], 'hyperlink': movie[num]['hyperlink'], 'image': movie[num]['image'], 'preview': movie[num]['preview']})
-    return temp_rec_movies_list
+        return temp_rec_movies_list
+    
+    else:
+        for movie in temp_movies:
+            if len(movie) == 0:
+                continue
+            
+            else:
+                all_movies_list.extend(movie)
+
+        nums = random.sample(range(0, len(all_movies_list)), min(3, len(all_movies_list)))   # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
+        for num in nums:
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={all_movies_list[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={all_movies_list[num]['hyperlink']} target="_blank">{all_movies_list[num]['title']}</a>
+                        <p class="box_content">{all_movies_list[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_movie">영화</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_movies_list.append({'title': all_movies_list[num]['title'], 'hyperlink': all_movies_list[num]['hyperlink'], 'image': all_movies_list[num]['image'], 'preview': all_movies_list[num]['preview']})
+        return temp_rec_movies_list
+
 
 ### Plays
 @st.cache
@@ -391,10 +445,14 @@ def get_plays_from_emotions(final_selection: List) -> List:
 
 def recommend_plays_from_emotions(temp_plays: List) -> List:
     temp_rec_plays_list = []
-    for play in temp_plays:
-        if len(play) == 0:
-            continue
-        else:
+    all_plays_list = []
+    check_length = check_list_elems_exists(temp_plays)
+
+    if check_length == 0:
+        return temp_rec_plays_list
+
+    elif check_length == 3:
+        for play in temp_plays:
             num = random.randrange(0, len(play))
             st.markdown(f'''<div class="box">
                 <div class="div2">
@@ -407,7 +465,30 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
                 <div><p class="what_play">연극 공연</p></div>
             </div>''', unsafe_allow_html=True)
             temp_rec_plays_list.append( {'title': play[num]['title'], 'hyperlink': play[num]['hyperlink'], 'image': play[num]['image'], 'preview': play[num]['preview']} )
-    return temp_rec_plays_list
+        return temp_rec_plays_list
+
+    else:
+        for play in temp_plays:
+            if len(play) == 0:
+                continue
+            else:
+                all_plays_list.extend(play)
+
+        nums = random.sample(range(0, len(all_plays_list)), min(3, len(all_plays_list)))
+        for num in nums:
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={all_plays_list[num]['image']}>
+                    <div class="div1">
+                        <a class="box_title" href={all_plays_list[num]['hyperlink']} target="_blank">{all_plays_list[num]['title']}</a>
+                        <p class="box_content">{all_plays_list[num]['preview']}</p>
+                    </div>
+                </div>
+                <div><p class="what_play">연극 공연</p></div>
+            </div>''', unsafe_allow_html=True)
+            temp_rec_plays_list.append( {'title': all_plays_list[num]['title'], 'hyperlink': all_plays_list[num]['hyperlink'], 'image': all_plays_list[num]['image'], 'preview': all_plays_list[num]['preview']} )
+        print(len(all_plays_list))
+        return temp_rec_plays_list
 
 
 def return_user_info(user_feelings_button=False) -> List:
