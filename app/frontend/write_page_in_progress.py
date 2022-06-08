@@ -351,35 +351,6 @@ def recommend_books_from_emotions(temp_books: List) -> List:
             temp_rec_books_list.append({'title': all_books_list[num]['title'],'author': all_books_list[num]['author'], 'hyperlink': all_books_list[num]['hyperlink'], 'image': all_books_list[num]['image'], 'preview': all_books_list[num]['preview']})
         return temp_rec_books_list
     
-    # elif check_length == 2:
-    #     temp_num_dict = {1: [1, 2], 2: [2, 1]} # 반환받을 감정 개수를 선택함. 감정라벨 2개에 해당하는 book만 있으므로 1개, 2개만을 뽑아올 라벨을 랜덤하게 정함.
-    #     i = random.choice([1, 2])  # 1과 2중 선택 후
-    #     num_of_samples_from_labels = temp_num_dict[i]  # 순서대로 뽑힌 감정마다 몇 개의 샘플을 추출할지 정함
-    #     for book in temp_books:
-    #         if len(book) == 0:
-    #             continue
-    #         else:
-    #             i = num_of_samples_from_labels[0]
-    #             popped_elem = num_of_samples_from_labels.pop(i)
-    #             num_of_samples_from_labels.append(popped_elem)
-    #             print(f"{i} for books=============================")
-    #             nums = random.sample(range(0, len(book)), i)  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
-                
-    #             print(nums,f"number in book random.sample! =======================")
-    #             for num in nums:
-    #                 st.markdown(f'''<div class="box">
-    #                     <div class="div2">
-    #                         <img class="movie_image" src={book[num]['image']}>
-    #                         <div class="div1">
-    #                             <a class="box_title" href={book[num]['hyperlink']} target="_blank">{book[num]['title']}</a>
-    #                             <p class="box_singer">{book[num]['author']}</p>
-    #                             <p class="box_content">{book[num]['preview']}</p>
-    #                         </div>
-    #                     </div>
-    #                     <div><p class="what_book">책</p></div>
-    #                 </div>''', unsafe_allow_html=True)
-    #                 temp_rec_books_list.append({'title': book[num]['title'],'author': book[num]['author'], 'hyperlink': book[num]['hyperlink'], 'image': book[num]['image'], 'preview': book[num]['preview']})
-    #             return temp_rec_books_list
 
 ### Movies
 @st.cache
@@ -527,9 +498,6 @@ def write_diary_and_contents(user_info, final_rec_contents):
         else:
             user_info['selected_content'][con]= fin
     
-    print("***************user_info******************: ", user_info, end = '\n')
-    print("******************done! end of user_info *************")
-    
     requests.post(url="http://localhost:8000/history/selection/insert", json = user_info)
 
 
@@ -541,14 +509,10 @@ def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
         for i in range(len(KOTE_label)):
             globals()[f'options_{i}'] = st.checkbox(KOTE_label[i], key=keys_kote[i])
             index.append(globals()[f'options_{i}'])
-
-        print()
-        print("index", index)
-        print()
         return ("KOTE", index)
+
     else:
         index = [option1, option2, option3]
-        print(index)
         return ("emotions", index)
 
 ### 감정이 emotions 
@@ -564,10 +528,6 @@ def select_emotion_label(temp_data: Tuple) -> List:  #
     print("final_selection: ", final_selection)
     return final_selection
 
-### TODO: 감정으로 content를 추천받아오는 함수를 만들어봅니다.
-# def get_songs_from_emotions(final_selection: List) -> List:
-#     response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
-
 
 ###############UI
 st.markdown('<p class="title">하루의 마침표.</p>', unsafe_allow_html=True)
@@ -579,7 +539,6 @@ user_feelings_button = False
 if user_diary:
     user_feelings_button = col.checkbox("당신의 감정을 정리해드릴게요", value=st.session_state["test1"], key='check1', on_change=flip1)   # st.button은 session_state를 지원하지 않아서 임시방편으로 chckbox를 사용함
     if user_feelings_button:
-    # st.markdown('<p class="emotions">감정 분석 결과입니다!</p>', unsafe_allow_html=True)
 
         ### 여기서부터 테스트
         print("============================== final_selection check!")
@@ -637,9 +596,6 @@ if user_diary:
             rec_plays_list = recommend_plays_from_emotions(temp_plays)
             final_rec_contents = [rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list]
 
-            print("check_list from recommeneded list in plays: ", rec_plays_list)
-            print("****************************************************")
-            print("check_dicts from recommended lists: ", rec_songs_list, rec_books_list, rec_movies_list, rec_plays_list)
             st.markdown("##")
             col1, col2 = st.columns([5, 1])
             col1.button("다시 추천해주세요!") # 
@@ -659,32 +615,3 @@ if user_diary:
 
         else:
             st.markdown('<p class="emotions">사용자의 선택을 기다리는 중...</p>', unsafe_allow_html=True)
-    ### TODO: 기록 확인하기 (유저 history data)
-
-
-    # TODO: 사용자 감정을 받아서 checkbox로 출력
-
-
-
-
-    # for i in range(len(emotions)):
-    #     user_label_dict[f"options_{i}"] = st.checkbox(emotions[i])
-
-    # print(d)
-    # user_contents_selection = st.multiselect(
-    #     "지금의 감정들이 맞는지 확인해주세요. 만약 아니라면, 다음을 선택해주세요!",
-    #     string
-    # )
-
-    # print(user_contents_selection)
-    # show_me_other_feelings = st.button("다른 감정들을 보여주세요")
-
-    # if show_me_other_feelings:
-    #     for i in range(len(KOTE_label)):
-    #         KOTE_label[i] = st.checkbox(KOTE_label[i])
-
-    # st.write("이런 감정들을 선택하셨어요!")
-    # ## 사용자의 일기를 분석하여 감정을 보여줍니다. 
-    # show_user_feelings = st.multiselect(
-    #     "지금 느끼는 감정들을 선택해주세요", string
-    # )
