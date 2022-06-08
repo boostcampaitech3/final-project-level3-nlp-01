@@ -73,7 +73,7 @@ https://python-poetry.org/docs<br/>
     ```  
 
     ```console
-    sreamlit run main_page.py
+    streamlit run main_page.py
     ```  
     서버환경에서 실행하는 경우 `--server.port {port number}` argument를 추가해주세요. main_page.py 파일명은 추후 수정 예정입니다.   
     
