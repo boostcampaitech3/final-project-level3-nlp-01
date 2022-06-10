@@ -2,6 +2,10 @@ import streamlit as st
 import requests
 from typing import List, Tuple, Optional, Dict
 import random
+import copy
+
+# st.sidebar.markdown("# page1")
+
 
 ### page style
 st.markdown("""<style>
@@ -229,14 +233,22 @@ def check_list_elems_exists(some_list: List) -> List:
 def get_feelings_from_diary(user_diary: str) -> Dict:
     response = requests.post(url="http://localhost:8000/diary/input", json = {"diary_content": user_diary})
     user_info = response.json()  # json keys: ['record_time', 'diary_content', 'now_feelings'] 일기 생성 시간, 내용, 감정; 
+    # diary
     return user_info
+
+
+# def write_page_diary(user_diary: List) -> 
+
+# def write_page_diary()
 
 
 ### Songs
 @st.cache
 def get_songs_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/songs/search", json = {"feelings": final_selection})
-    songs = eval(response.content)
+    songs = eval(response.content.decode('UTF-8'))
+    #print("============================SONGS====================================")
+    #print(songs[0])
     return songs
 
 
@@ -244,6 +256,8 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
     temp_rec_songs_list = []
     all_songs_list =[]
     check_length = check_list_elems_exists(temp_songs)
+
+    st.markdown('<p class="recom_music">당신의 밤을 장식할 노래 한 곡</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_songs_list
 
@@ -252,7 +266,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
             num = random.randrange(0, len(song))
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <img class="song_image" src="https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg">
                     <div class="div1">
                         <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
                         <p class="box_singer">{song[num]['singer']}</p>
@@ -275,7 +289,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
         for num in nums:
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <img class="song_image" src="https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg">
                     <div class="div1">
                         <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
                         <p class="box_singer">{song[num]['singer']}</p>
@@ -292,7 +306,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
 @st.cache
 def get_books_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/books/search", json = {"feelings": final_selection})
-    books = eval(response.content)
+    books = eval(response.content.decode('UTF-8'))
     return books
 
 
@@ -300,6 +314,7 @@ def recommend_books_from_emotions(temp_books: List) -> List:
     temp_rec_books_list = []
     all_books_list = []
     check_length = check_list_elems_exists(temp_books)
+    st.markdown('<p class="recom_book">오늘을 마무리할 책 한 권</p>', unsafe_allow_html=True)
     if check_length == 0:  ## 만약 temp_books에 아무것도 안 들어있다면 return temp_rec_books_list 반환하기!
         return temp_rec_books_list 
     
@@ -329,9 +344,13 @@ def recommend_books_from_emotions(temp_books: List) -> List:
 
         nums = random.sample(range(0, len(all_books_list)), min(3, len(all_books_list)))  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
         for num in nums:
+            if all_books_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_books_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_books_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_books_list[num]['hyperlink']} target="_blank">{all_books_list[num]['title']}</a>
                         <p class="box_singer">{all_books_list[num]['author']}</p>
@@ -348,13 +367,16 @@ def recommend_books_from_emotions(temp_books: List) -> List:
 @st.cache
 def get_movies_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/movies/search", json = {"feelings": final_selection})
-    movies = eval(response.content)
+    movies = eval(response.content.decode('UTF-8'))
+    # print("============================Movies====================================")
+    # print(movies[0])
     return movies
 
 def recommend_movies_from_emotions(temp_movies: List) -> List:
     temp_rec_movies_list = []
     all_movies_list = []
     check_length = check_list_elems_exists(temp_movies)
+    st.markdown('<p class="recom_movie">당신의 하루를 닭은 또 다른 누군가의 하루를 영화로</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_movies_list
 
@@ -384,9 +406,13 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
 
         nums = random.sample(range(0, len(all_movies_list)), min(3, len(all_movies_list)))   # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
         for num in nums:
+            if all_movies_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_movies_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_movies_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_movies_list[num]['hyperlink']} target="_blank">{all_movies_list[num]['title']}</a>
                         <p class="box_content">{all_movies_list[num]['preview']}</p>
@@ -402,7 +428,9 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
 @st.cache
 def get_plays_from_emotions(final_selection: List) -> List:
     response = requests.post(url="http://localhost:8000/contents/plays/search", json = {"feelings": final_selection})
-    plays = eval(response.content)
+    plays = eval(response.content.decode('UTF-8'))
+    print("=================check_decode_error=================")
+    print(plays)
     return plays
 
 
@@ -410,13 +438,17 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
     temp_rec_plays_list = []
     all_plays_list = []
     check_length = check_list_elems_exists(temp_plays)
-
+    st.markdown('<p class="recom_play">오늘과 닮은 주말을 선물할 공연</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_plays_list
 
     elif check_length == 3:
         for play in temp_plays:
             num = random.randrange(0, len(play))
+            # if play[num]['image'] != 'None':
+            #     play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            # else:
+            #     play_image = play[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
                     <img class="movie_image" src={play[num]['image']}>
@@ -439,9 +471,13 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
 
         nums = random.sample(range(0, len(all_plays_list)), min(3, len(all_plays_list)))
         for num in nums:
+            if all_plays_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_plays_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_plays_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_plays_list[num]['hyperlink']} target="_blank">{all_plays_list[num]['title']}</a>
                         <p class="box_content">{all_plays_list[num]['preview']}</p>
@@ -474,18 +510,45 @@ def write_diary_and_contents(user_info: Dict, final_rec_contents: List) -> None:
     user_info = user_info
     contents = ['songs', 'books', 'movies', 'plays']
     empty_contents = dict.fromkeys(contents)
-    user_info.pop('diary_content')
-    user_info.pop('now_feelings')
+
     user_info['selected_content'] = empty_contents
     
 
+    print("=******************--(*_(-9092374023 user_info")
+    print(user_info)
+    print(user_info.keys())
+
+    print("===========step2_user_info===========")
+    user_info['selected_content'] = empty_contents
+    
     for con, fin in zip(contents, final_rec_contents):  # [songs, books, movies, plays]
         if len(fin) == 0:
             user_info['selected_content'][con]=[{},{},{}]
         else:
             user_info['selected_content'][con]= fin
     
-    requests.post(url="http://localhost:8000/history/selection/insert", json = user_info)
+    ### user_info 복사
+    user_info_for_selection_insert, user_info_for_diary_insert = copy.deepcopy(user_info), copy.deepcopy(user_info)
+
+    user_info_for_selection_insert.pop('now_feelings')
+    user_info_for_selection_insert.pop('diary_content')
+    print(user_info_for_selection_insert.keys(), "======user_info_for_selection_insert")
+
+    
+    print()
+    ### user_info 복사
+    user_info_for_diary_insert['feelings'] = user_info_for_diary_insert['now_feelings']
+    user_info_for_diary_insert.pop('now_feelings')
+    user_info_for_diary_insert['recommended_content'] = user_info_for_diary_insert['selected_content']
+    user_info_for_diary_insert.pop('selected_content')
+    print(user_info_for_diary_insert.keys(), "======user_info_for_selection_insert")
+
+
+    ### history/selection/insert
+    requests.post(url="http://localhost:8000/history/selection/insert", json = user_info_for_selection_insert)
+
+    ### history/diary/insert
+    requests.post(url="http://localhost:8000/history/diary/insert", json = user_info_for_diary_insert)
 
 
 def split_and_show_labels(emotion_data, there_is_no_emotions=False) -> Tuple:
@@ -589,7 +652,6 @@ if user_diary:
 
             if save_to_history:
                 print("===========user_info===========")
-                print(user_info)
                 write_diary_and_contents(user_info, final_rec_contents)
 
                 print("saved to history!")
