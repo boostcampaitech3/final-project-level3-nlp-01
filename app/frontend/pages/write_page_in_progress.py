@@ -3,6 +3,9 @@ import requests
 from typing import List, Tuple, Optional, Dict
 import random
 
+# st.sidebar.markdown("# page1")
+
+
 ### page style
 st.markdown("""<style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300&family=Song+Myung&display=swap');
@@ -244,6 +247,8 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
     temp_rec_songs_list = []
     all_songs_list =[]
     check_length = check_list_elems_exists(temp_songs)
+
+    st.markdown('<p class="recom_music">당신의 밤을 장식할 노래 한 곡</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_songs_list
 
@@ -300,6 +305,7 @@ def recommend_books_from_emotions(temp_books: List) -> List:
     temp_rec_books_list = []
     all_books_list = []
     check_length = check_list_elems_exists(temp_books)
+    st.markdown('<p class="recom_book">오늘을 마무리할 책 한 권</p>', unsafe_allow_html=True)
     if check_length == 0:  ## 만약 temp_books에 아무것도 안 들어있다면 return temp_rec_books_list 반환하기!
         return temp_rec_books_list 
     
@@ -355,6 +361,7 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
     temp_rec_movies_list = []
     all_movies_list = []
     check_length = check_list_elems_exists(temp_movies)
+    st.markdown('<p class="recom_movie">당신의 하루를 닭은 또 다른 누군가의 하루를 영화로</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_movies_list
 
@@ -410,13 +417,17 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
     temp_rec_plays_list = []
     all_plays_list = []
     check_length = check_list_elems_exists(temp_plays)
-
+    st.markdown('<p class="recom_play">오늘과 닮은 주말을 선물할 공연</p>', unsafe_allow_html=True)
     if check_length == 0:
         return temp_rec_plays_list
 
     elif check_length == 3:
         for play in temp_plays:
             num = random.randrange(0, len(play))
+            # if play[num]['image'] != 'None':
+            #     play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            # else:
+            #     play_image = play[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
                     <img class="movie_image" src={play[num]['image']}>
@@ -439,9 +450,13 @@ def recommend_plays_from_emotions(temp_plays: List) -> List:
 
         nums = random.sample(range(0, len(all_plays_list)), min(3, len(all_plays_list)))
         for num in nums:
+            if all_plays_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_plays_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_plays_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_plays_list[num]['hyperlink']} target="_blank">{all_plays_list[num]['title']}</a>
                         <p class="box_content">{all_plays_list[num]['preview']}</p>
