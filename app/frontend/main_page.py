@@ -187,96 +187,111 @@ st.markdown('<img class ="title_img" src="https://velog.velcdn.com/images/leeyej
 
 if write_button:
     # url = st.get_url()
-    link = 'http://118.67.131.239:30001/write_page_in_progress'
+    link = 'http://118.67.131.239:30001/write_page'
     webbrowser.open_new_tab(link)
 
 diarys = get_diary()
 historys = get_history()
-historys = historys[1:]
+historys = historys[6:]
+diarys = diarys[6:]
+historys.reverse()
+diarys.reverse()
 
-for history in historys:
 
-    time = history['record_time']
-    selected_contents = history['selected_content']
-    songs = selected_contents['songs']
-    books = selected_contents['books']
-    movies = selected_contents['movies']
-    plays = selected_contents['plays']
+for num in range(len(historys)):
+    try:
+        times = historys[num]['record_time']
+        selected_contents = historys[num]['selected_content']
+        songs = selected_contents['songs']
+        books = selected_contents['books']
+        movies = selected_contents['movies']
+        plays = selected_contents['plays']
+        diary_content = diarys[num]['diary_content']
+        feelings = diarys[num]['feelings']
+        record_time = diarys[num]['record_time']
 
-    print(">>>>>>>>>>>>", time)
-    print(">>>>>>>>>>>>", type(songs))
-
-    # st.markdown(f'<p class="content">{diary_content}</p>', unsafe_allow_html=True)
-    # st.markdown(f'<p class="emotions">#{feelings[0]} #{feelings[1]} #{feelings[2]}</p>', unsafe_allow_html=True)
-    st.markdown(f'<p class="date">{time}</p>', unsafe_allow_html=True)
-    
-    # 노래
-    st.markdown('<p class="recom_music">당신의 밤을 장식할 노래 한 곡</p>', unsafe_allow_html=True)
-    for song in songs:
-        st.markdown(f'''<div class="box">
-            <div class="div2">
-                <img class="song_image" src=https://cdnimg.melon.co.kr/cm2/album/images/109/37/474/10937474_20220428225312_500.jpg/melon/resize/120/quality/80/optimize">
-                <div class="div1">
-                    <a class="box_title" href={song['hyperlink']} target="_blank">{song['title']}</a>
-                    <p class="box_singer">{song['singer']}</p>
-                    <p class="box_content">{song['preview']}</p>
+        st.markdown(f'<p class="content">{diary_content}</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="emotions">#{feelings[0]} #{feelings[1]} #{feelings[2]}</p>', unsafe_allow_html=True)
+        st.markdown(f'<p class="date">{times}</p>', unsafe_allow_html=True)
+        
+        # 노래
+        st.markdown('<p class="recom_music">당신의 밤을 장식할 노래 한 곡</p>', unsafe_allow_html=True)
+        for song in songs:
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="song_image" src="https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg">
+                    <div class="div1">
+                        <a class="box_title" href={song['hyperlink']} target="_blank">{song['title']}</a>
+                        <p class="box_singer">{song['singer']}</p>
+                        <p class="box_content">{song['preview']}</p>
+                    </div>
                 </div>
-            </div>
-            <div><p class="what_music">노래</p></div>
-        </div>''', unsafe_allow_html=True)
+                <div><p class="what_music">노래</p></div>
+            </div>''', unsafe_allow_html=True)
 
-    # 책
-    st.markdown('<p class="recom_book">오늘을 마무리할 책 한 권</p>', unsafe_allow_html=True)
-    for book in books:
-        st.markdown(f'''<div class="box">
-            <div class="div2">
-                <img class="movie_image" src={book['image']}>
-                <div class="div1">
-                    <a class="box_title" href={book['hyperlink']} target="_blank">{book['title']}</a>
-                    <p class="box_singer">{book['author']}</p>
-                    <p class="box_content">{book['preview']}</p>
+        # 책
+        st.markdown('<p class="recom_book">오늘을 마무리할 책 한 권</p>', unsafe_allow_html=True)
+        for book in books:
+            if book['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = book['image']
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={play_image}>
+                    <div class="div1">
+                        <a class="box_title" href={book['hyperlink']} target="_blank">{book['title']}</a>
+                        <p class="box_singer">{book['author']}</p>
+                        <p class="box_content">{book['preview']}</p>
+                    </div>
                 </div>
-            </div>
-            <div><p class="what_book">책</p></div>
-        </div>''', unsafe_allow_html=True)
+                <div><p class="what_book">책</p></div>
+            </div>''', unsafe_allow_html=True)
 
-    #영화
-    st.markdown('<p class="recom_movie">당신의 하루를 닭은 또 다른 누군가의 하루를 영화로</p>', unsafe_allow_html=True)
-    for movie in movies:
-        st.markdown(f'''<div class="box">
-            <div class="div2">
-                <img class="movie_image" src={movie['image']}>
-                <div class="div1">
-                    <a class="box_title" href={movie['hyperlink']} target="_blank">{movie['title']}</a>
-                    <p class="box_content">{movie['preview']}</p>
+        #영화
+        st.markdown('<p class="recom_movie">당신의 하루를 닭은 또 다른 누군가의 하루를 영화로</p>', unsafe_allow_html=True)
+        for movie in movies:
+            if movie['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = movie['image']
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={play_image}>
+                    <div class="div1">
+                        <a class="box_title" href={movie['hyperlink']} target="_blank">{movie['title']}</a>
+                        <p class="box_content">{movie['preview']}</p>
+                    </div>
                 </div>
-            </div>
-            <div><p class="what_movie">영화</p></div>
-        </div>''', unsafe_allow_html=True)
+                <div><p class="what_movie">영화</p></div>
+            </div>''', unsafe_allow_html=True)
 
-    #연극
-    st.markdown('<p class="recom_play">오늘과 닮은 주말을 선물할 공연</p>', unsafe_allow_html=True)
-    for play in plays:
-        if play['image'] == 'nan':
-            play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
-        else:
-            play_image = play['image']
-        st.markdown(f'''<div class="box">
-            <div class="div2">
-                <img class="movie_image" src={play_image}>
-                <div class="div1">
-                    <a class="box_title" href={play['hyperlink']} target="_blank">{play['title']}</a>
-                    <p class="box_content">{play['preview']}</p>
+        #연극
+        st.markdown('<p class="recom_play">오늘과 닮은 주말을 선물할 공연</p>', unsafe_allow_html=True)
+        for play in plays:
+            if play['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = play['image']
+            st.markdown(f'''<div class="box">
+                <div class="div2">
+                    <img class="movie_image" src={play_image}>
+                    <div class="div1">
+                        <a class="box_title" href={play['hyperlink']} target="_blank">{play['title']}</a>
+                        <p class="box_content">{play['preview']}</p>
+                    </div>
                 </div>
-            </div>
-            <div><p class="what_play">연극 공연</p></div>
-        </div>''', unsafe_allow_html=True)
+                <div><p class="what_play">연극 공연</p></div>
+            </div>''', unsafe_allow_html=True)
 
-    st.markdown("", unsafe_allow_html=True)
-    st.markdown("", unsafe_allow_html=True)
-    st.markdown("***", unsafe_allow_html=True)
-    st.markdown("", unsafe_allow_html=True)
-    st.markdown("", unsafe_allow_html=True)
+        st.markdown("", unsafe_allow_html=True)
+        st.markdown("", unsafe_allow_html=True)
+        st.markdown("***", unsafe_allow_html=True)
+        st.markdown("", unsafe_allow_html=True)
+        st.markdown("", unsafe_allow_html=True)
+
+    except:
+        continue
 
 st.markdown("<p class='end'>오늘의 마침표.</p>", unsafe_allow_html=True)
 st.markdown("<p class='end2'>2022 boostcamp AI Tech | nlp-01조</p>", unsafe_allow_html=True)

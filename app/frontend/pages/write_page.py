@@ -266,7 +266,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
             num = random.randrange(0, len(song))
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <img class="song_image" src="https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg">
                     <div class="div1">
                         <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
                         <p class="box_singer">{song[num]['singer']}</p>
@@ -289,7 +289,7 @@ def recommend_songs_from_emotions(temp_songs: List) -> List:
         for num in nums:
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="song_image" src=https://thumbs.dreamstime.com/b/dynamic-radial-color-sound-equalizer-design-music-album-cover-template-abstract-circular-digital-data-form-vector-160916775.jpg">
+                    <img class="song_image" src="https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg">
                     <div class="div1">
                         <a class="box_title" href={song[num]['hyperlink']} target="_blank">{song[num]['title']}</a>
                         <p class="box_singer">{song[num]['singer']}</p>
@@ -344,9 +344,13 @@ def recommend_books_from_emotions(temp_books: List) -> List:
 
         nums = random.sample(range(0, len(all_books_list)), min(3, len(all_books_list)))  # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
         for num in nums:
+            if all_books_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_books_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_books_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_books_list[num]['hyperlink']} target="_blank">{all_books_list[num]['title']}</a>
                         <p class="box_singer">{all_books_list[num]['author']}</p>
@@ -402,9 +406,13 @@ def recommend_movies_from_emotions(temp_movies: List) -> List:
 
         nums = random.sample(range(0, len(all_movies_list)), min(3, len(all_movies_list)))   # list 형태로 반환. 만약 198개의 book이 반환되었다면 그 중 랜덤하게 [23, 51, 2]로 뽑힘
         for num in nums:
+            if all_movies_list[num]['image'] == 'nan':
+                play_image = 'https://icon-library.com/images/no-photo-available-icon/no-photo-available-icon-12.jpg'
+            else:
+                play_image = all_movies_list[num]['image']
             st.markdown(f'''<div class="box">
                 <div class="div2">
-                    <img class="movie_image" src={all_movies_list[num]['image']}>
+                    <img class="movie_image" src={play_image}>
                     <div class="div1">
                         <a class="box_title" href={all_movies_list[num]['hyperlink']} target="_blank">{all_movies_list[num]['title']}</a>
                         <p class="box_content">{all_movies_list[num]['preview']}</p>
