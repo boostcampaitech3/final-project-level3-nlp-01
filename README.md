@@ -59,8 +59,9 @@ https://python-poetry.org/docs<br/>
 `poetry install`
 <br/><br/>
 
-## Pretrained model은 용량이 너무 커서 다음 링크에서 다운받습니다.
+## Pretrained model은 용량이 너무 커서 다음 링크에서 다운 받습니다.
 #### `https://drive.google.com/drive/folders/1m02-d4Ihl2gdfKoM9iUHqE2AlvdjMhhE?usp=sharing`
+그 이후에 app/saved_model 안에 넣어주시면 됩니다.
 <br/><br/>
 
 ## Local Server (Front-end, Back-end)
@@ -85,11 +86,10 @@ https://python-poetry.org/docs<br/>
 
 
 ### Back-end 실행
-1. 가상환경 활성화를 위해 다음 커맨드를 입력합니다.
-    ```console
-    source virtualenv.sh```
+1. 가상환경 활성화를 위해 다음 커맨드를 입력합니다.  
+    * ```source virtualenv.sh```
 2. fastapi server를 구동시키기 위해 다음 커맨드를 입력합니다.
-    * `python -m app`
+    * `python -m app --url {URL} --port {PORT} --db_name {DB_NAME}`
 
     
 ## Cloud Server
