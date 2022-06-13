@@ -1,16 +1,33 @@
+
 # Project Overview
 
 # 하루의 마침표.
-> ### “당신의 하루를 들려주세요. 오늘을 닮은 선물을 드릴게요.”  
+### “당신의 하루를 들려주세요. 오늘을 닮은 선물을 드릴게요.”  
 
-**하루의 마침표.** 는 일기 텍스트에서 추출된 감정에 기반해 컨텐츠를 추천하는 서비스입니다.  
+```
+일기는 편지라기보단 기록입니다. 하루를 회고하거나 떠오르는 생각을 정리하기 위해 쓰곤 하죠.
 
-멜론, 네이버 영화, 교보문고 등 사용자에게 컨텐츠를 추천하는 서비스는 다양하게 보급되어 있습니다. 그러나 이들 서비스의 공통점은 현재 인기가 많거나, 사용자가 이용했던 컨텐츠와 비슷한 컨텐츠를 추천해줍니다.   
+하지만 간혹, 일기가 편지였으면 좋겠다고 느끼기도 하죠. 누군가 나의 하루에 응답을 보냈으면 좋겠다고 생각하면서요. 
+오늘 하루가 너무도 눈부셔서 자랑을 하고 싶거나, 혹은 반대로 너무나 울적해서 기댈 어깨라도 필요할 때면요.
+
+'하루의 마침표'는 조금 색다른 방식으로 당신의 일기에 답신을 보내기 위해 만들어졌습니다. 
+우리는 당신의 하루를 듣기 위해, 그리고 오늘을 닮은 선물을 보내기 위해 여기에 있습니다. 
+
+당신의 하루를 나누고 싶은 밤이 찾아올 때면 짤막한 일기를 적어주세요. 우리는 당신의 밤을 책임질 새벽배송을 준비하겠습니다.
+```
+
+
+**하루의 마침표.** 는 일기 텍스트에서 추출된 감정에 기반해 컨텐츠를 추천하는, 그렇게 추천된 컨텐츠와 일기를 합쳐 하나의 완성된 피드로 저장하는 서비스입니다.  
+
 </br>
-> ***인기순으로 나열된 컨텐츠 추천 말고, 감정 기반 컨텐츠 추천은 어떨까요?***  
 
-본 프로젝트의 메인 아이디어는 사용자의 감정에 기반한 컨텐츠 추천입니다! 사용자의 감정을 텍스트로 입력받아 감정을 분석하고, 사용자의 감정을 세 가지로 분류해 알려드립니다. 기본적으로 사용자의 감정과 동일하게 분류된 컨텐츠를 추천해드리지만, 분류된 감정이 사용자의 감정과 맞지 않거나 사용자가 다른 감정을 원하는 경우 다른 감정을 선택할 수 있습니다. 컨텐츠는 사용자가 선택한 최종 3가지의 감정에 기반해 추천됩니다.   
+>***인기순으로 나열된 컨텐츠 추천 말고, 감정 기반 컨텐츠 추천은 어떨까요?***  
+
 </br>
+본 프로젝트의 메인 아이디어는 사용자의 감정에 기반한 컨텐츠 추천 시스템입니다. 사용자의 감정을 텍스트로 입력받아 감정을 분석하고, 사용자의 감정을 세 가지로 분류해 알려드립니다. 기본적으로 사용자의 감정과 동일하게 분류된 컨텐츠를 추천해드리지만, 분류된 감정이 사용자의 감정과 맞지 않거나 사용자가 다른 감정을 원하는 경우 다른 감정을 선택할 수 있습니다. 컨텐츠는 사용자가 선택한 최종 3가지의 감정에 기반해 추천됩니다.   
+
+</br>
+
  
 ### 하루의 마침표. 프로젝트 미리보기
 ![overview](https://user-images.githubusercontent.com/82494506/172327794-2b9f6cd4-82c6-4ad9-bba7-c7bebebdeffc.png)
@@ -28,7 +45,7 @@
 
 # Architecture
 ![Architecture](https://user-images.githubusercontent.com/79088141/172328054-3c7a7c2c-8397-464c-b317-12b43c3d5900.png)
-자세한 내용은 [발표 pdf](https://github.com/boostcampaitech3/final-project-level3-nlp-01/blob/main/NLP_1%EC%A1%B0_%ED%95%98%EB%A3%A8%EC%9D%98%20%EB%A7%88%EC%B9%A8%ED%91%9C.pdf)를 참고해주시면 됩니다.
+자세한 내용은 [발표 pdf](https://github.com/boostcampaitech3/final-project-level3-nlp-01/files/8851388/NLP_1._.pdf)를 참고해주시면 됩니다.
 
 </br>
 </br>
@@ -42,8 +59,9 @@ https://python-poetry.org/docs<br/>
 `poetry install`
 <br/><br/>
 
-## Pretrained model은 용량이 너무 커서 다음 링크에서 다운받습니다.
+## Pretrained model은 용량이 너무 커서 다음 링크에서 다운 받습니다.
 #### `https://drive.google.com/drive/folders/1m02-d4Ihl2gdfKoM9iUHqE2AlvdjMhhE?usp=sharing`
+그 이후에 app/saved_model 안에 넣어주시면 됩니다.
 <br/><br/>
 
 ## Local Server (Front-end, Back-end)
@@ -59,7 +77,7 @@ https://python-poetry.org/docs<br/>
     ```  
 
     ```console
-    sreamlit run main_page.py
+    streamlit run main_page.py
     ```  
     서버환경에서 실행하는 경우 `--server.port {port number}` argument를 추가해주세요. main_page.py 파일명은 추후 수정 예정입니다.   
     
@@ -68,12 +86,10 @@ https://python-poetry.org/docs<br/>
 
 
 ### Back-end 실행
-1. 가상환경 활성화를 위해 다음 커맨드를 입력합니다.
-    ```console
-    source virtualenv.sh
-    ```
+1. 가상환경 활성화를 위해 다음 커맨드를 입력합니다.  
+    * ```source virtualenv.sh```
 2. fastapi server를 구동시키기 위해 다음 커맨드를 입력합니다.
-    - `python -m app`
+    * `python -m app --url {URL} --port {PORT} --db_name {DB_NAME}`
 
     
 ## Cloud Server
@@ -129,6 +145,7 @@ Reference : https://github.com/Beomi/KcELECTRA
 예를 들어 영화 데이터셋은 `./data/movies/movie_dataset_image.csv` 파일을 이용해 불러올 수 있습니다. ('image'가 포함된 데이터셋을 사용해야 합니다.)
 도메인 별 수집 과정은 다음과 같습니다.
 
+
 ## 음악
 음악은 2022년 6월 기준 멜론 Top100과 2011 ~ 2021년 동안의 Top50 데이터로 이루어져있습니다.  
 수집된 정보는 '제목', '가수', '가사', 'URL', '이미지' 이렇게 다섯가지로 총 600개의 데이터를 확보했습니다.  
@@ -138,7 +155,7 @@ Reference : https://github.com/Beomi/KcELECTRA
 ## 책
 책 데이터는 yes24 소설/시 카테고리 중 '강력추천' 도서 목록((http://www.yes24.com/24/Category/More/001001046?ElemNo=95&ElemSeq=1))을 크롤링했으며 수집된 정보는 '도서명', '저자', '소개글', 'URL', '이미지 경로' 총 다섯가지입니다.  
 중복을 제거해 총 238개의 데이터를 확보했습니다.
-경
+
 <img width="200" alt="스크린샷 2022-06-05 오후 9 25 28" src="https://user-images.githubusercontent.com/79218038/172327413-94dc2306-303c-4950-8bd7-935d2e118894.png">
 
 
@@ -147,9 +164,11 @@ Reference : https://github.com/Beomi/KcELECTRA
 중복을 제거하여 총 284개의 데이터를 확보했습니다.
 - BBC 선정 '2000년 이후 명작 영화 100선'</br><img width="200" alt="스크린샷 2022-06-05 오후 9 37 02" src="https://user-images.githubusercontent.com/79218038/172325968-405cae15-2657-4411-99ce-3ba1e4808cb6.png">
 
+
 - OTT 플랫폼 별 인기 영화 + 네이버 기준 장르별 많이 검색된 영화</br><img width="200" alt="스크린샷 2022-06-02 오전 2 36 38" src="https://user-images.githubusercontent.com/79218038/172325523-67eae3c5-4225-4cc2-b6fb-52b93d63ee26.png">
 
 - 네이버 영화 랭킹 평점 기준 </br><img width="200" alt="스크린샷 2022-06-05 오후 9 23 21" src="https://user-images.githubusercontent.com/79218038/172325402-0620e2aa-0cde-408e-a53f-8cd81d264257.png">
+
 
 ## 공연
 공연 데이터는 네이버 공연 목록에서 '클래식', '뮤지컬', '연극' 등을 포함한 모든 장르를 크롤링했습니다.
@@ -184,4 +203,5 @@ Reference : https://github.com/Beomi/KcELECTRA
 
 - GCP Cloud를 사용하여 Local Server와 분리했습니다.
 - MongoDB를 사용했습니다.
+
 

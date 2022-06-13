@@ -6,6 +6,7 @@ from collections import deque
 from fastapi import APIRouter, status
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
+from app.__main__ import URL, PORT, DB_NAME
 
 class DiaryContentInput(BaseModel):
     record_time: str = Field(..., description="일기가 적힌 날짜")
@@ -31,14 +32,12 @@ def startup_event():
     from os.path import join
     
     global diary_history_database, selection_history_database, remote_selection_database, remote_diary_database
-    url = '34.64.134.113'
-    client = MongoClient(host=url, port=27017)
-    db_name='final_project'
+    client = MongoClient(host=URL, port=PORT)
     
-    remote_selection_database = client[db_name]['selection_history']
+    remote_selection_database = client[DB_NAME]['selection_history']
     selection_history_database = get_databse_deque(remote_selection_database)
 
-    remote_diary_database = client[db_name]['diary_history']
+    remote_diary_database = client[DB_NAME]['diary_history']
     diary_history_database = get_databse_deque(remote_diary_database)
 
 @router.get("/diary")

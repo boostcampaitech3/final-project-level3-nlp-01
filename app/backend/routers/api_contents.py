@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field
 from typing import List
 from app.backend.routers.api_diary import DiaryAndFeelings
 from app.backend.routers.api_history import DiaryContentInput
+from app.__main__ import URL, PORT, DB_NAME
 
 class FeelingInput(BaseModel):
     feelings: List[str] = Field(..., description="일기에 담긴 감정들")
@@ -54,19 +55,17 @@ def startup_event():
     global songs_database, books_database, movies_database, plays_database,\
            playlist, booklist, movielist, theaterlist
            
-    url = '34.64.134.113'
-    client = MongoClient(host=url, port=27017)
-    db_name='final_project'
+    client = MongoClient(host=URL, port=PORT)
     
     playlist = []
     booklist = []
     movielist = []
     theaterlist = []
     
-    books_database = init_local_db(client=client, db_name=db_name, collection_name='book')
-    movies_database = init_local_db(client=client, db_name=db_name, collection_name='movie')
-    plays_database = init_local_db(client=client, db_name=db_name, collection_name='play')
-    songs_database = init_local_db(client=client, db_name=db_name, collection_name='song')
+    books_database = init_local_db(client=client, db_name=DB_NAME, collection_name='book')
+    movies_database = init_local_db(client=client, db_name=DB_NAME, collection_name='movie')
+    plays_database = init_local_db(client=client, db_name=DB_NAME, collection_name='play')
+    songs_database = init_local_db(client=client, db_name=DB_NAME, collection_name='song')
 
 @router.post("/recommend", response_model=DiaryContentInput)
 def recommend_contents(diary_and_feelings: DiaryAndFeelings):
